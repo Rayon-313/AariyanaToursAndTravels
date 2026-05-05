@@ -9,12 +9,12 @@ const destinations = [
   { label: 'Popular', title: 'Bali, Indonesia', duration: '7 Days Tour', price: 'Rs 89999' },
 ]
 
-function TrendingDestination({ images }) {
+function TrendingDestination({ images, onViewAll }) {
   return (
     <section className="destination-section" id="destinations">
       <div className="section-title-row">
         <h2>Trending Destinations</h2>
-        <button type="button">View All</button>
+        <button type="button" onClick={onViewAll}>View All</button>
       </div>
 
       <div className="destination-grid">

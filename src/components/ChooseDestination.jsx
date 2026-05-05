@@ -9,12 +9,12 @@ const choices = [
   { label: 'Popular', title: 'Bali, Indonesia', duration: '7 Days Tour', price: 'Rs 89999' },
 ]
 
-function ChooseDestination({ images }) {
+function ChooseDestination({ images, onViewAll }) {
   return (
     <section className="destination-section choose-section">
       <div className="section-title-row">
         <h2>Choose Your Destinations</h2>
-        <button type="button">View All</button>
+        <button type="button" onClick={onViewAll}>View All</button>
       </div>
 
       <div className="destination-grid">

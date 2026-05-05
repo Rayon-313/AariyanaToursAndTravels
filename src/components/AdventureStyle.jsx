@@ -1,7 +1,10 @@
-function AdventureStyle({ images }) {
+function AdventureStyle({ images, onViewAll }) {
   return (
     <section className="adventure-section">
-      <h2>Different Adventure Styles For You</h2>
+      <div className="section-title-row">
+        <h2>Different Adventure Styles For You</h2>
+        <button type="button" onClick={onViewAll}>View All</button>
+      </div>
 
       <div className="adventure-gallery">
         <img className="adventure-large" src={images[0]} alt="" />
@@ -11,9 +14,6 @@ function AdventureStyle({ images }) {
         <img src={images[0]} alt="" />
       </div>
 
-      <div className="adventure-action">
-        <button type="button">View All</button>
-      </div>
     </section>
   )
 }

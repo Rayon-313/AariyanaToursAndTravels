@@ -2,14 +2,14 @@ import Header from './header'
 
 const filters = ['Choose Destination', 'Choose Package', 'Choose Duration']
 
-function Home({ images }) {
+function Home({ images, onNavigate }) {
   const [heroImage] = images
 
   return (
     <section className="hero-section" id="home">
       <img className="hero-image" src={heroImage} alt="" />
       <div className="hero-overlay" />
-      <Header />
+      <Header activePage="home" onNavigate={onNavigate} />
 
       <div className="hero-content">
         <h1>Experience The Magic</h1>
