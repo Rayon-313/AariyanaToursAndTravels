@@ -117,27 +117,23 @@ button {
 }
 
 .is-page-header .brand-logo {
-  width: 86px;
-  height: 66px;
-  flex-basis: 86px;
+  width: 74px;
+  height: 56px;
+  flex-basis: 74px;
 }
 
 .is-page-header .brand-logo-mark {
-  left: 7px;
-  width: 58px;
-  height: 50px;
-}
-
-.is-page-header .brand-logo-plane {
-  width: 56px;
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .brand-logo {
   position: relative;
   display: block;
-  width: 96px;
-  height: 76px;
-  flex: 0 0 96px;
+  width: 78px;
+  height: 58px;
+  flex: 0 0 78px;
 }
 
 .brand-logo img {
@@ -147,18 +143,10 @@ button {
 }
 
 .brand-logo-mark {
-  left: 8px;
-  bottom: 0;
-  width: 64px;
-  height: 56px;
-}
-
-.brand-logo-plane {
-  top: 0;
-  right: 0;
-  width: 62px;
-  height: auto;
-  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.22));
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.18));
 }
 
 .offer {
@@ -738,6 +726,8 @@ button {
 .review-card {
   min-height: 202px;
   padding: 12px 22px 20px;
+  display: flex;
+  flex-direction: column;
   text-align: left;
   color: #55565c;
   background: #fff9fb;
@@ -746,6 +736,15 @@ button {
   box-shadow:
     0 4px 0 rgba(64, 135, 188, 0.68),
     0 12px 20px rgba(50, 107, 151, 0.12);
+  transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+}
+
+.review-card:hover {
+  background: #f9f5e5;
+  transform: translateY(-6px);
+  box-shadow:
+    0 4px 0 rgba(64, 135, 188, 0.68),
+    0 18px 28px rgba(50, 107, 151, 0.18);
 }
 
 .stars {
@@ -772,16 +771,21 @@ button {
 .reviewer {
   display: flex;
   align-items: center;
-  gap: 18px;
-  margin-left: 0;
+  gap: 14px;
+  margin-top: auto;
+  margin-left: 6px;
 }
 
-.reviewer > span {
-  width: 34px;
-  height: 34px;
-  flex: 0 0 34px;
+.reviewer img {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
   border-radius: 50%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
   background: #d9d9d9;
+  box-shadow: 0 0 0 2px #ffffff, 0 3px 8px rgba(19, 39, 108, 0.16);
 }
 
 .reviewer strong,
@@ -1509,6 +1513,17 @@ button {
   z-index: 30;
 }
 
+.trip-detail-hero .brand-logo {
+  width: 72px;
+  height: 50px;
+  flex-basis: 72px;
+}
+
+.trip-detail-hero .brand-logo-mark {
+  width: 48px;
+  height: 38px;
+}
+
 .trip-detail-main {
   width: min(1060px, calc(100% - 48px));
   margin: 42px auto 130px;
@@ -1601,9 +1616,18 @@ button {
   border-right: 0;
 }
 
-.trip-info-grid span {
+.trip-info-grid .trip-info-icon {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
   color: #27395d;
-  font-size: 18px;
+}
+
+.trip-info-grid .trip-info-icon svg {
+  width: 24px;
+  height: 24px;
+  display: block;
 }
 
 .trip-info-grid strong {
@@ -1957,13 +1981,30 @@ button {
   gap: 14px;
 }
 
+.photo-gallery-grid button {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  display: block;
+  overflow: hidden;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+  box-shadow: 0 1px 0 rgba(16, 26, 51, 0.08);
+}
+
 .photo-gallery-grid img {
   width: 100%;
   height: 100%;
   display: block;
   object-fit: cover;
-  border-radius: 6px;
-  box-shadow: 0 1px 0 rgba(16, 26, 51, 0.08);
+  transition: transform 180ms ease;
+}
+
+.photo-gallery-grid button:hover img,
+.photo-gallery-grid button:focus-visible img {
+  transform: scale(1.04);
 }
 
 .photo-gallery-grid .wide {
@@ -1973,6 +2014,40 @@ button {
 
 .photo-gallery-grid .tall {
   grid-row: span 3;
+}
+
+.gallery-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  padding: 28px;
+  display: grid;
+  place-items: center;
+  background: rgba(4, 14, 27, 0.82);
+}
+
+.gallery-lightbox img {
+  max-width: min(1040px, 100%);
+  max-height: min(760px, calc(100vh - 88px));
+  display: block;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
+}
+
+.gallery-lightbox-close {
+  position: fixed;
+  top: 18px;
+  right: 22px;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(255, 255, 255, 0.58);
+  border-radius: 50%;
+  color: #ffffff;
+  background: rgba(7, 19, 35, 0.64);
+  font-size: 30px;
+  line-height: 1;
+  cursor: pointer;
 }
 
 .more-photos-button {
@@ -2051,8 +2126,19 @@ button {
   text-shadow: none;
 }
 
-.support-page-hero .brand-logo {
-  display: none;
+.support-page-hero .brand-logo,
+.about-page-hero .brand-logo {
+  display: block;
+  width: 54px;
+  height: 40px;
+  flex-basis: 54px;
+}
+
+.support-page-hero .brand-logo-mark,
+.about-page-hero .brand-logo-mark {
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .support-page-hero .offer {
@@ -2329,10 +2415,6 @@ button {
   color: #101a33;
   font-size: 13px;
   text-shadow: none;
-}
-
-.about-page-hero .brand-logo {
-  display: none;
 }
 
 .about-page-hero .offer {

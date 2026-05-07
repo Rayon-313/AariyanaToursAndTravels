@@ -52,7 +52,6 @@ function Home({ images, onNavigate }) {
               <span className="filter-chevron" aria-hidden="true" />
             </button>
           ))}
-          <button type="submit" className="search-submit">Search</button>
         </form>
         <p>Immerse yourself in breathtaking journeys</p>
       </div>
