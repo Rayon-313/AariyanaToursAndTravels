@@ -8,14 +8,9 @@ const navItems = [
     label: 'Destinations',
     href: '#destinations',
     key: 'destinations',
-    menu: [
-      { label: 'Bali', href: '#destinations' },
-      { label: 'India', href: '#destinations' },
-      { label: 'Bhutan', href: '#destinations' },
-      { label: 'Tibet', href: '#destinations' },
-    ],
+
   },
-  { label: 'Bookings', href: '#bookings', key: 'bookings' },
+  { label: 'Bookings', href: '#bookings', key: 'bookings' }, // stories ko pages haru sabai bookings xa hai
   {
     label: 'Support',
     href: '#support',
@@ -60,7 +55,7 @@ function Header({ activePage = 'home', onNavigate, variant = 'hero' }) {
       </a>
 
       <p className="offer">
-        <span>GET 20% OFF</span>
+        <span>GET 20% OFF Book N</span>
       </p>
 
       <label className="destination-search">

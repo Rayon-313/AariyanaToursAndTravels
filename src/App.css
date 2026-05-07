@@ -187,11 +187,11 @@ button {
 
 @keyframes offer-slide {
   0% {
-    transform: translateX(-105%);
+    transform: translateX(100%);
   }
 
   100% {
-    transform: translateX(170px);
+    transform: translateX(-105%);
   }
 }
 
@@ -1185,6 +1185,24 @@ button {
   background: linear-gradient(135deg, var(--navy), #287fc4);
   font-size: 12px;
   font-weight: 800;
+}
+
+.book-now-button {
+  min-width: 86px;
+  min-height: 34px;
+  border: 0;
+  border-radius: 999px;
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--navy), #287fc4);
+  font-size: 12px;
+  margin-left: 10px ;
+  font-weight: 800;
+}
+
+
+.book-now-button a{
+  color: #ffffff;
+  text-decoration: none;
 }
 
 .load-destinations-button {

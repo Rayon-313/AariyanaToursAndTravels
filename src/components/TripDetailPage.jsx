@@ -1,74 +1,83 @@
-import { useState } from 'react'
-import Header from './header'
-import SiteFooter from './SiteFooter'
+import { useState } from "react";
+import Header from "./header";
+import SiteFooter from "./SiteFooter";
+import { companyPhoneNumber } from "./WhatsAppButton";
 
 const defaultTrip = {
-  title: 'Bali Tour',
-  location: 'Bali, Indonesia',
-  duration: '10 days / 9 nights',
-  group: 'Max 12 people',
-  language: 'Indonesian / English',
-  price: 'Rs. 4,999',
-  rating: '4.9',
-  label: 'Best Seller',
-}
+  title: "Bali Tour",
+  location: "Bali, Indonesia",
+  duration: "10 days / 9 nights",
+  group: "Max 12 people",
+  language: "Indonesian / English",
+  price: "Rs. 4,999",
+  rating: "4.9",
+  label: "Best Seller",
+};
 
 const itinerary = [
   {
-    title: 'Arrival & Relaxation',
-    text: 'Land in Ngurah Rai International Airport and head to your hotel in Seminyak or Nusa Dua. Spend the day settling in by the beach, enjoying sunset views, and trying local Balinese food.',
+    title: "Arrival & Relaxation",
+    text: "Land in Ngurah Rai International Airport and head to your hotel in Seminyak or Nusa Dua. Spend the day settling in by the beach, enjoying sunset views, and trying local Balinese food.",
   },
   {
-    title: 'Culture & Nature in Ubud',
-    text: 'Travel to Ubud, visit the Sacred Monkey Forest Sanctuary, explore rice terraces, and stop by Tegallalang Rice Terrace. End the day with a traditional dance performance.',
+    title: "Culture & Nature in Ubud",
+    text: "Travel to Ubud, visit the Sacred Monkey Forest Sanctuary, explore rice terraces, and stop by Tegallalang Rice Terrace. End the day with a traditional dance performance.",
   },
   {
-    title: 'Temples & Scenic Spots',
-    text: 'Visit iconic temples like Tanah Lot Temple and Uluwatu Temple. Enjoy ocean views and catch a sunset Kecak dance at Uluwatu.',
+    title: "Temples & Scenic Spots",
+    text: "Visit iconic temples like Tanah Lot Temple and Uluwatu Temple. Enjoy ocean views and catch a sunset Kecak dance at Uluwatu.",
   },
   {
-    title: 'Adventure or Island Trip',
-    text: 'Choose between water activities, snorkeling around the Nusa islands, or a day trip to Nusa Penida for dramatic cliffs and beaches.',
+    title: "Adventure or Island Trip",
+    text: "Choose between water activities, snorkeling around the Nusa islands, or a day trip to Nusa Penida for dramatic cliffs and beaches.",
   },
-]
+];
 
 const reviews = [
   {
-    name: 'Sarah Davis',
-    date: 'October 2025',
-    text: 'Aariyana Tours made our honeymoon absolutely perfect. Every detail of our Bali trip was handled with such professionalism.',
+    name: "Sarah Davis",
+    date: "October 2025",
+    text: "Aariyana Tours made our honeymoon absolutely perfect. Every detail of our Bali trip was handled with such professionalism.",
   },
   {
-    name: 'Samir Khan',
-    date: 'October 2025',
-    text: 'Our Bali itinerary felt balanced and easy. The temples, rice terraces, beaches, and transfers were all arranged beautifully.',
+    name: "Samir Khan",
+    date: "October 2025",
+    text: "Our Bali itinerary felt balanced and easy. The temples, rice terraces, beaches, and transfers were all arranged beautifully.",
   },
-]
+];
 
-const parsePrice = (price) => Number(String(price).replace(/[^0-9]/g, '')) || 0
+const parsePrice = (price) => Number(String(price).replace(/[^0-9]/g, "")) || 0;
 
-const formatPrice = (price) => `Rs. ${price.toLocaleString('en-IN')}`
+const formatPrice = (price) => `Rs. ${price.toLocaleString("en-IN")}`;
 
 function TripDetailPage({ trip, images, onNavigate }) {
-  const selectedTrip = { ...defaultTrip, image: images[0], ...trip }
-  const sideImage = images[3] || selectedTrip.image
-  const [guestCount, setGuestCount] = useState(2)
-  const pricePerPerson = parsePrice(selectedTrip.price)
-  const earlyBirdDiscount = 500
-  const subtotal = pricePerPerson * guestCount
-  const total = Math.max(subtotal - earlyBirdDiscount, 0)
-  const guestLabel = `${guestCount} ${guestCount === 1 ? 'Adult' : 'Adults'}`
+  const selectedTrip = { ...defaultTrip, image: images[0], ...trip };
+  const sideImage = images[3] || selectedTrip.image;
+  const [guestCount, setGuestCount] = useState(2);
+  const pricePerPerson = parsePrice(selectedTrip.price);
+  const earlyBirdDiscount = 500;
+  const subtotal = pricePerPerson * guestCount;
+  const total = Math.max(subtotal - earlyBirdDiscount, 0);
+  const guestLabel = `${guestCount} ${guestCount === 1 ? "Adult" : "Adults"}`;
 
   return (
     <div className="trip-detail-page">
       <section className="trip-detail-hero">
         <img src={selectedTrip.image} alt="" />
         <div className="trip-detail-hero-overlay" />
-        <Header activePage={selectedTrip.source === 'booking' ? 'bookings' : 'destinations'} onNavigate={onNavigate} />
+        <Header
+          activePage={
+            selectedTrip.source === "booking" ? "bookings" : "destinations"
+          }
+          onNavigate={onNavigate}
+        />
       </section>
 
       <main className="trip-detail-main">
-        <section className="trip-detail-content" aria-labelledby="trip-detail-title">
+        <section
+          className="trip-detail-content"
+          aria-labelledby="trip-detail-title"
+        >
           <div className="trip-title-block">
             <div>
               <span>{selectedTrip.label}</span>
@@ -76,8 +85,9 @@ function TripDetailPage({ trip, images, onNavigate }) {
             </div>
             <h1 id="trip-detail-title">{selectedTrip.title}</h1>
             <p>
-              Discover beaches, temples, waterfalls, rice terraces, and unforgettable cultural
-              activities with a curated journey designed for comfort, culture, and adventure.
+              Discover beaches, temples, waterfalls, rice terraces, and
+              unforgettable cultural activities with a curated journey designed
+              for comfort, culture, and adventure.
             </p>
           </div>
 
@@ -99,7 +109,10 @@ function TripDetailPage({ trip, images, onNavigate }) {
             </article>
           </div>
 
-          <section className="itinerary-section" aria-labelledby="itinerary-title">
+          <section
+            className="itinerary-section"
+            aria-labelledby="itinerary-title"
+          >
             <h2 id="itinerary-title">Itinerary</h2>
             <ol className="itinerary-list">
               {itinerary.map((item, index) => (
@@ -114,7 +127,10 @@ function TripDetailPage({ trip, images, onNavigate }) {
             </ol>
           </section>
 
-          <section className="guest-review-section" aria-labelledby="guest-review-title">
+          <section
+            className="guest-review-section"
+            aria-labelledby="guest-review-title"
+          >
             <div className="guest-review-heading">
               <div>
                 <h2 id="guest-review-title">Guest Review</h2>
@@ -123,7 +139,7 @@ function TripDetailPage({ trip, images, onNavigate }) {
                   <span>Based on 58 reviews</span>
                 </p>
               </div>
-              <button type="button">Write a review</button>
+              {/* <button type="button">Write a review</button> */}
             </div>
 
             <div className="review-detail-list">
@@ -147,6 +163,7 @@ function TripDetailPage({ trip, images, onNavigate }) {
         </section>
 
         <aside className="trip-booking-panel" aria-label="Booking summary">
+           <img className="trip-side-image" src={sideImage} alt="" />
           <div className="trip-price-card">
             <p>
               <strong>{selectedTrip.price}</strong>
@@ -167,7 +184,11 @@ function TripDetailPage({ trip, images, onNavigate }) {
               <span className="guest-stepper">
                 <button
                   type="button"
-                  onClick={() => setGuestCount((currentCount) => Math.max(currentCount - 1, 1))}
+                  onClick={() =>
+                    setGuestCount((currentCount) =>
+                      Math.max(currentCount - 1, 1),
+                    )
+                  }
                   disabled={guestCount === 1}
                   aria-label="Decrease guests"
                 >
@@ -176,7 +197,9 @@ function TripDetailPage({ trip, images, onNavigate }) {
                 <strong>{guestLabel}</strong>
                 <button
                   type="button"
-                  onClick={() => setGuestCount((currentCount) => currentCount + 1)}
+                  onClick={() =>
+                    setGuestCount((currentCount) => currentCount + 1)
+                  }
                   aria-label="Increase guests"
                 >
                   +
@@ -186,7 +209,9 @@ function TripDetailPage({ trip, images, onNavigate }) {
 
             <div className="price-lines">
               <p>
-                <span>{formatPrice(pricePerPerson)} x {guestCount}</span>
+                <span>
+                  {formatPrice(pricePerPerson)} x {guestCount}
+                </span>
                 <strong>{formatPrice(subtotal)}</strong>
               </p>
               <p>
@@ -197,17 +222,29 @@ function TripDetailPage({ trip, images, onNavigate }) {
 
             <div className="trip-total">
               <span>Total</span>
-              <strong>{formatPrice(total)}</strong>
+              <div>
+                <strong>{formatPrice(total)}</strong>
+                <button className="book-now-button" type="button">
+                  <a
+                    rel="noopener noreferrer"
+                    target="_blank" // Added this so it opens in a new tab
+                    href={`https://wa.me/${companyPhoneNumber}`} //Added so it opens the company whats app chat
+                    aria-label="Chat on WhatsApp"
+                  >
+                    Book now
+                  </a>
+                </button>
+              </div>
             </div>
           </div>
 
-          <img className="trip-side-image" src={sideImage} alt="" />
+         
         </aside>
       </main>
 
       <SiteFooter onNavigate={onNavigate} />
     </div>
-  )
+  );
 }
 
-export default TripDetailPage
+export default TripDetailPage;
