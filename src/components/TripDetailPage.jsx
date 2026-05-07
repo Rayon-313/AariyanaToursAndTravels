@@ -49,6 +49,49 @@ const parsePrice = (price) => Number(String(price).replace(/[^0-9]/g, '')) || 0
 
 const formatPrice = (price) => `Rs. ${price.toLocaleString('en-IN')}`
 
+function TripInfoIcon({ name }) {
+  const commonProps = {
+    width: 24,
+    height: 24,
+    viewBox: '0 0 24 24',
+    fill: 'none',
+    stroke: 'currentColor',
+    strokeWidth: 2,
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
+    'aria-hidden': 'true',
+  }
+
+  if (name === 'duration') {
+    return (
+      <svg {...commonProps}>
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 7v5l3 2" />
+      </svg>
+    )
+  }
+
+  if (name === 'group') {
+    return (
+      <svg {...commonProps}>
+        <path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" />
+        <circle cx="9.5" cy="7" r="4" />
+        <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+      </svg>
+    )
+  }
+
+  return (
+    <svg {...commonProps}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M3 12h18" />
+      <path d="M12 3a14 14 0 0 1 0 18" />
+      <path d="M12 3a14 14 0 0 0 0 18" />
+    </svg>
+  )
+}
+
 function TripDetailPage({ trip, images, onNavigate }) {
   const selectedTrip = { ...defaultTrip, image: images[0], ...trip }
   const sideImage = images[3] || selectedTrip.image
@@ -83,17 +126,23 @@ function TripDetailPage({ trip, images, onNavigate }) {
 
           <div className="trip-info-grid" aria-label="Trip information">
             <article>
-              <span aria-hidden="true">D</span>
+              <span className="trip-info-icon">
+                <TripInfoIcon name="duration" />
+              </span>
               <strong>Duration</strong>
               <p>{selectedTrip.duration}</p>
             </article>
             <article>
-              <span aria-hidden="true">G</span>
+              <span className="trip-info-icon">
+                <TripInfoIcon name="group" />
+              </span>
               <strong>Group</strong>
               <p>{selectedTrip.group}</p>
             </article>
             <article>
-              <span aria-hidden="true">L</span>
+              <span className="trip-info-icon">
+                <TripInfoIcon name="language" />
+              </span>
               <strong>Languages</strong>
               <p>{selectedTrip.language}</p>
             </article>

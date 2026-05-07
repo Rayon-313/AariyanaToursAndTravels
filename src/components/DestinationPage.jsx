@@ -5,20 +5,23 @@ import SiteFooter from './SiteFooter'
 const regions = ['Southeast Asia', 'Europe', 'Middle East', 'Oceania']
 
 const baseDestinations = [
-  { title: 'Coastal Escape', price: 'Rs. 3,999', priceValue: 3999, rating: '4.9', region: 'Southeast Asia' },
-  { title: 'Coastal Escape', price: 'Rs. 1,999', priceValue: 1999, rating: '4.9', region: 'Europe' },
-  { title: 'Coastal Escape', price: 'Rs. 2,599', priceValue: 2599, rating: '4.9', region: 'Middle East' },
-  { title: 'Coastal Escape', price: 'Rs. 3,599', priceValue: 3599, rating: '4.9', region: 'Oceania' },
-  { title: 'Coastal Escape', price: 'Rs. 2,299', priceValue: 2299, rating: '4.9', region: 'Southeast Asia' },
-  { title: 'Coastal Escape', price: 'Rs. 3,499', priceValue: 3499, rating: '4.9', region: 'Europe' },
+  { title: 'Bali, Indonesia', price: 'Rs. 3,999', priceValue: 3999, rating: '4.9', region: 'Southeast Asia', imageIndex: 0 },
+  { title: 'India Golden Triangle', price: 'Rs. 1,999', priceValue: 1999, rating: '4.8', region: 'Southeast Asia', imageIndex: 1 },
+  { title: 'Bhutan Happiness Trail', price: 'Rs. 2,599', priceValue: 2599, rating: '4.9', region: 'Southeast Asia', imageIndex: 2 },
+  { title: 'Tibet Himalayan Route', price: 'Rs. 3,599', priceValue: 3599, rating: '4.8', region: 'Southeast Asia', imageIndex: 3 },
+  { title: 'Amalfi Coast, Italy', price: 'Rs. 2,299', priceValue: 2299, rating: '4.9', region: 'Europe', imageIndex: 4 },
+  { title: 'Dubai Skyline Break', price: 'Rs. 3,499', priceValue: 3499, rating: '4.8', region: 'Middle East', imageIndex: 5 },
+  { title: 'Maldives Island Hopping', price: 'Rs. 3,899', priceValue: 3899, rating: '4.9', region: 'Oceania', imageIndex: 6 },
+  { title: 'Kyoto Cultural Tour', price: 'Rs. 3,299', priceValue: 3299, rating: '4.8', region: 'Southeast Asia', imageIndex: 7 },
 ]
 
-function DestinationPage({ images, onNavigate, onViewDetails }) {
+function DestinationPage({ images, onNavigate, onViewDetails, searchQuery = '' }) {
   const [heroImage] = images
   const [selectedRegions, setSelectedRegions] = useState(regions)
   const [maxBudget, setMaxBudget] = useState(3999)
   const [extraCount, setExtraCount] = useState(0)
   const hasLoadedMore = extraCount > 0
+  const normalizedSearchQuery = searchQuery.trim().toLowerCase()
 
   const destinationPool = useMemo(
     () => {
@@ -44,7 +47,11 @@ function DestinationPage({ images, onNavigate, onViewDetails }) {
 
   const filteredDestinations = destinationPool.filter((destination) => {
     const regionMatches = selectedRegions.length === 0 || selectedRegions.includes(destination.region)
-    return regionMatches && destination.priceValue <= maxBudget
+    const searchMatches =
+      normalizedSearchQuery.length === 0 ||
+      `${destination.title} ${destination.region}`.toLowerCase().includes(normalizedSearchQuery)
+
+    return regionMatches && destination.priceValue <= maxBudget && searchMatches
   })
 
   const toggleRegion = (region) => {
@@ -114,13 +121,15 @@ function DestinationPage({ images, onNavigate, onViewDetails }) {
         <section className="destination-results" aria-labelledby="destination-page-title">
           <div className="destination-results-heading">
             <p>Explore Destinations</p>
-            <h1 id="destination-page-title">Curated experiences across 4 continents</h1>
+            <h1 id="destination-page-title">
+              {searchQuery ? `Search results for "${searchQuery}"` : 'Curated experiences across 4 continents'}
+            </h1>
           </div>
 
           <div className="destination-results-grid">
-            {filteredDestinations.map((destination, index) => (
+            {filteredDestinations.map((destination) => (
               <article className="destination-result-card" key={destination.key}>
-                <img src={images[index % images.length]} alt="" />
+                <img src={images[destination.imageIndex % images.length]} alt="" />
                 <div className="result-card-body">
                   <div className="result-card-title">
                     <h2>{destination.title}</h2>
@@ -141,7 +150,7 @@ function DestinationPage({ images, onNavigate, onViewDetails }) {
                         location: destination.region,
                         price: destination.price,
                         rating: destination.rating,
-                        image: images[index % images.length],
+                        image: images[destination.imageIndex % images.length],
                         source: 'destination',
                       })
                     }

@@ -28,6 +28,7 @@ const destinationImages = [image01, image02, image03, image04, image05, image06,
 function App() {
   const [page, setPage] = useState('home')
   const [selectedTrip, setSelectedTrip] = useState(null)
+  const [destinationSearch, setDestinationSearch] = useState('')
 
   useEffect(() => {
     if ('scrollRestoration' in window.history) {
@@ -39,6 +40,7 @@ function App() {
     if (initialState?.page) {
       setPage(initialState.page)
       setSelectedTrip(initialState.trip || null)
+      setDestinationSearch(initialState.page === 'destinations' ? initialState.searchQuery || '' : '')
     } else {
       window.history.replaceState({ page: 'home', trip: null }, '', '#home')
     }
@@ -51,6 +53,7 @@ function App() {
       const historyPage = event.state?.page || 'home'
       setPage(historyPage)
       setSelectedTrip(event.state?.trip || null)
+      setDestinationSearch(historyPage === 'destinations' ? event.state?.searchQuery || '' : '')
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
 
@@ -61,10 +64,11 @@ function App() {
     }
   }, [])
 
-  const navigateTo = (nextPage) => {
+  const navigateTo = (nextPage, options = {}) => {
     setSelectedTrip(null)
+    setDestinationSearch(nextPage === 'destinations' ? options.searchQuery || '' : '')
     setPage(nextPage)
-    window.history.pushState({ page: nextPage, trip: null }, '', `#${nextPage}`)
+    window.history.pushState({ page: nextPage, trip: null, searchQuery: options.searchQuery || '' }, '', `#${nextPage}`)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
@@ -78,7 +82,12 @@ function App() {
   if (page === 'destinations') {
     return (
       <main className="site-shell">
-        <DestinationPage images={destinationImages} onNavigate={navigateTo} onViewDetails={openTripDetail} />
+        <DestinationPage
+          images={destinationImages}
+          onNavigate={navigateTo}
+          onViewDetails={openTripDetail}
+          searchQuery={destinationSearch}
+        />
         <WhatsAppButton />
       </main>
     )

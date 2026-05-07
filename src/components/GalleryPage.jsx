@@ -1,7 +1,10 @@
+import { useEffect, useState } from 'react'
 import Header from './header'
 import SiteFooter from './SiteFooter'
 
 function GalleryPage({ images, onNavigate }) {
+  const [selectedImage, setSelectedImage] = useState(null)
+
   const galleryImages = [
     images[0],
     images[1],
@@ -12,6 +15,21 @@ function GalleryPage({ images, onNavigate }) {
     images[0],
     images[2],
   ]
+
+  useEffect(() => {
+    if (!selectedImage) {
+      return undefined
+    }
+
+    function handleKeyDown(event) {
+      if (event.key === 'Escape') {
+        setSelectedImage(null)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [selectedImage])
 
   return (
     <div className="gallery-page">
@@ -29,12 +47,15 @@ function GalleryPage({ images, onNavigate }) {
 
         <div className="photo-gallery-grid" aria-label="Travel photo gallery">
           {galleryImages.map((image, index) => (
-            <img
+            <button
               className={index === 0 ? 'wide' : index === 1 || index === 4 ? 'tall' : undefined}
-              src={image}
-              alt=""
               key={`${image}-${index}`}
-            />
+              type="button"
+              onClick={() => setSelectedImage(image)}
+              aria-label={`Open gallery image ${index + 1}`}
+            >
+              <img src={image} alt="" />
+            </button>
           ))}
         </div>
 
@@ -43,6 +64,26 @@ function GalleryPage({ images, onNavigate }) {
           <span aria-hidden="true" />
         </button>
       </main>
+
+      {selectedImage && (
+        <div
+          className="gallery-lightbox"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Gallery image preview"
+          onClick={() => setSelectedImage(null)}
+        >
+          <button
+            className="gallery-lightbox-close"
+            type="button"
+            onClick={() => setSelectedImage(null)}
+            aria-label="Close gallery image preview"
+          >
+            ×
+          </button>
+          <img src={selectedImage} alt="" onClick={(event) => event.stopPropagation()} />
+        </div>
+      )}
 
       <SiteFooter onNavigate={onNavigate} />
     </div>

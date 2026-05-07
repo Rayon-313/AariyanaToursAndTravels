@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import logoImage from '../assets/Logo.png'
-import planeImage from '../assets/Plane.png'
 
 const navItems = [
   { label: 'Home', href: '#home', key: 'home' },
@@ -9,10 +8,10 @@ const navItems = [
     href: '#destinations',
     key: 'destinations',
     menu: [
-      { label: 'Bali', href: '#destinations' },
-      { label: 'India', href: '#destinations' },
-      { label: 'Bhutan', href: '#destinations' },
-      { label: 'Tibet', href: '#destinations' },
+      { label: 'Bali', href: '#destinations', searchQuery: 'Bali' },
+      { label: 'India', href: '#destinations', searchQuery: 'India' },
+      { label: 'Bhutan', href: '#destinations', searchQuery: 'Bhutan' },
+      { label: 'Tibet', href: '#destinations', searchQuery: 'Tibet' },
     ],
   },
   { label: 'Bookings', href: '#bookings', key: 'bookings' },
@@ -29,6 +28,7 @@ const navItems = [
 
 function Header({ activePage = 'home', onNavigate, variant = 'hero' }) {
   const [activeNav, setActiveNav] = useState(activePage)
+  const [searchTerm, setSearchTerm] = useState('')
 
   useEffect(() => {
     setActiveNav(activePage)
@@ -44,6 +44,26 @@ function Header({ activePage = 'home', onNavigate, variant = 'hero' }) {
     }
   }
 
+  const searchDestinations = (event) => {
+    event.preventDefault()
+
+    if (onNavigate) {
+      onNavigate('destinations', { searchQuery: searchTerm.trim() })
+    }
+  }
+
+  const navigateDestinationMenu = (event, menuItem, itemKey) => {
+    if (menuItem.searchQuery && onNavigate) {
+      event.preventDefault()
+      setActiveNav('destinations')
+      setSearchTerm(menuItem.searchQuery)
+      onNavigate('destinations', { searchQuery: menuItem.searchQuery })
+      return
+    }
+
+    navigate(event, menuItem.key || itemKey)
+  }
+
   return (
     <header className={`header ${variant === 'page' ? 'is-page-header' : ''}`}>
       <a
@@ -54,7 +74,6 @@ function Header({ activePage = 'home', onNavigate, variant = 'hero' }) {
       >
         <span className="brand-logo" aria-hidden="true">
           <img className="brand-logo-mark" src={logoImage} alt="" />
-          <img className="brand-logo-plane" src={planeImage} alt="" />
         </span>
         <span>Aariyana Tours and Travels</span>
       </a>
@@ -63,10 +82,15 @@ function Header({ activePage = 'home', onNavigate, variant = 'hero' }) {
         <span>GET 20% OFF</span>
       </p>
 
-      <label className="destination-search">
+      <form className="destination-search" onSubmit={searchDestinations}>
         <span className="search-icon" aria-hidden="true" />
-        <input type="search" placeholder="Search destinations..." />
-      </label>
+        <input
+          type="search"
+          placeholder="Search destinations..."
+          value={searchTerm}
+          onChange={(event) => setSearchTerm(event.target.value)}
+        />
+      </form>
 
       <nav className="main-nav" aria-label="Main navigation">
         {navItems.map((item) => (
@@ -89,7 +113,7 @@ function Header({ activePage = 'home', onNavigate, variant = 'hero' }) {
                     href={menuItem.href}
                     key={menuItem.label}
                     role="menuitem"
-                    onClick={(event) => navigate(event, menuItem.key || item.key)}
+                    onClick={(event) => navigateDestinationMenu(event, menuItem, item.key)}
                   >
                     {menuItem.label}
                   </a>
