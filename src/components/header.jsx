@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import logoImage from '../assets/Logo.png'
+import logoImage from '../assets/Logooo.png'
 
 const navItems = [
   { label: 'Home', href: '#home', key: 'home' },
@@ -73,7 +73,7 @@ function Header({ activePage = 'home', onNavigate, variant = 'hero' }) {
       </a>
 
       <p className="offer">
-        <span>GET 20% OFF Book N</span>
+        <span>GET 20% OFF Book Now</span>
       </p>
 
       <form className="destination-search" onSubmit={searchDestinations}>
