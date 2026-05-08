@@ -1,307 +1,237 @@
-import { useEffect, useRef, useState } from 'react'
-import planeImage from '../assets/Plane.png'
+import { useEffect, useState } from "react";
 
-const benefits = ['Custom tours', 'Easy stays', 'Visa help', 'Smooth travel', '24/7 support']
+const destinations = [
+  {
+    name: "Bali",
+    country: "Indonesia",
+    lat: -8.3405,
+    lng: 115.092,
+    span: 2.1,
+    mood: "Island escapes",
+    duration: "7 days",
+  },
+  {
+    name: "Vietnam",
+    country: "Vietnam",
+    lat: 14.0583,
+    lng: 108.2772,
+    span: 7,
+    mood: "Culture trails",
+    duration: "8 days",
+  },
+  {
+    name: "Thailand",
+    country: "Thailand",
+    lat: 15.87,
+    lng: 100.9925,
+    span: 6.5,
+    mood: "Beach and city",
+    duration: "6 days",
+  },
+];
 
-function EarthModel() {
-  const canvasRef = useRef(null)
+const worldView = {
+  name: "World",
+  country: "Overview",
+  lat: 12,
+  lng: 35,
+  span: 155,
+  isOverview: true,
+};
 
-  useEffect(() => {
-    const canvas = canvasRef.current
-    const frame = canvas?.parentElement
+function getOpenStreetMapUrl(destination) {
+  if (destination.isOverview) {
+    return "https://www.openstreetmap.org/export/embed.html?bbox=-180%2C-70%2C180%2C85&layer=mapnik";
+  }
 
-    if (!canvas || !frame) {
-      return undefined
-    }
+  const horizontalSpan = destination.span;
+  const verticalSpan = destination.span * 0.58;
 
-    let THREE
-    let renderer
-    let scene
-    let camera
-    let earthGroup
-    let quickEarth = null
-    let earth = null
-    let animationFrame = 0
-    let resizeObserver
-    let idleTask = 0
-    const disposables = []
-    let isMounted = true
+  const left = destination.lng - horizontalSpan;
+  const right = destination.lng + horizontalSpan;
+  const bottom = destination.lat - verticalSpan;
+  const top = destination.lat + verticalSpan;
 
-    const disposeObject = (object) => {
-      object.traverse((child) => {
-        if (child.geometry) {
-          child.geometry.dispose()
-        }
+  return `https://www.openstreetmap.org/export/embed.html?bbox=${left}%2C${bottom}%2C${right}%2C${top}&layer=mapnik`;
+}
 
-        const materials = Array.isArray(child.material) ? child.material : [child.material]
+function getDestinationFocus(destination) {
+  const zoomScale = 2.8;
 
-        materials.filter(Boolean).forEach((material) => {
-          Object.values(material).forEach((value) => {
-            if (value?.isTexture) {
-              value.dispose()
-            }
-          })
+  const x = Math.min(92, Math.max(8, ((destination.lng + 180) / 360) * 100));
 
-          material.dispose()
-        })
-      })
-    }
+  const latRad = (destination.lat * Math.PI) / 180;
+  const mercator = Math.log(Math.tan(Math.PI / 4 + latRad / 2));
 
-    const resize = () => {
-      if (!renderer || !camera) {
-        return
-      }
+  const y = Math.min(86, Math.max(14, (1 - mercator / Math.PI) * 50));
 
-      const { width, height } = frame.getBoundingClientRect()
-      const nextWidth = Math.max(1, Math.floor(width))
-      const nextHeight = Math.max(1, Math.floor(height))
+  return {
+    "--focus-x": `${x}%`,
+    "--focus-y": `${y}%`,
+    "--zoom-x": `${50 - x * zoomScale}%`,
+    "--zoom-y": `${50 - y * zoomScale}%`,
+  };
+}
 
-      camera.aspect = nextWidth / nextHeight
-      camera.updateProjectionMatrix()
-      renderer.setSize(nextWidth, nextHeight, false)
-    }
+function WorldMap({
+  mapDestination,
+  selectedDestination,
+  zoomDestination,
+  isZooming,
+}) {
+  const mapStyle = getDestinationFocus(zoomDestination || selectedDestination);
 
-    const loadDetailedModel = async () => {
-      const [{ FBXLoader }] = await Promise.all([
-        import('three/examples/jsm/loaders/FBXLoader.js'),
-        new Promise((resolve) => {
-          const schedule = window.requestIdleCallback || ((callback) => window.setTimeout(callback, 450))
-          idleTask = schedule(resolve, { timeout: 2200 })
-        }),
-      ])
+  const showFocusMarker = !selectedDestination.isOverview && isZooming;
 
-      if (!isMounted) {
-        return
-      }
+  const showSettledMarker =
+    !selectedDestination.isOverview && !isZooming && !zoomDestination;
 
-      const textureLoader = new THREE.TextureLoader()
-      const [emissiveMap, normalMap, roughnessMap] = await Promise.all([
-        textureLoader.loadAsync('/earth-desktop-model/textures/Earth_EM.png'),
-        textureLoader.loadAsync('/earth-desktop-model/textures/Earth_NORM.png'),
-        textureLoader.loadAsync('/earth-desktop-model/textures/Earth_ROUGH.png'),
-      ])
+  const showDetailMap = isZooming && zoomDestination;
 
-      if (!isMounted) {
-        emissiveMap.dispose()
-        normalMap.dispose()
-        roughnessMap.dispose()
-        return
-      }
+  const showOverviewFrame = mapDestination.isOverview && !isZooming;
 
-      const material = new THREE.MeshStandardMaterial({
-        map: quickEarth.material.map,
-        emissiveMap,
-        normalMap,
-        roughnessMap,
-        emissive: new THREE.Color(0x1a5f9d),
-        emissiveIntensity: 0.18,
-        roughness: 0.86,
-        metalness: 0,
-      })
+  return (
+    <div
+      className={`world-map-card ${isZooming ? "is-zooming" : ""}`}
+      style={mapStyle}
+    >
+      <div className="world-map-overlay" />
 
-      const model = await new FBXLoader().loadAsync('/earth-desktop-model/source/Earth.fbx')
+      {showOverviewFrame && (
+        <iframe
+          className="world-map world-map-active"
+          key={mapDestination.name}
+          src={getOpenStreetMapUrl(mapDestination)}
+          title={`OpenStreetMap view of ${selectedDestination.name}`}
+          loading="lazy"
+        />
+      )}
 
-      if (!isMounted) {
-        material.dispose()
-        disposeObject(model)
-        return
-      }
+      {!mapDestination.isOverview && !isZooming && (
+        <iframe
+          className="world-map world-map-active"
+          key={mapDestination.name}
+          src={getOpenStreetMapUrl(mapDestination)}
+          title={`OpenStreetMap view of ${selectedDestination.name}`}
+          loading="lazy"
+        />
+      )}
 
-      model.traverse((child) => {
-        if (child.isMesh) {
-          child.material = material
-          child.castShadow = false
-          child.receiveShadow = false
-        }
-      })
+      {showDetailMap && (
+        <iframe
+          className="world-map world-map-detail"
+          src={getOpenStreetMapUrl(zoomDestination)}
+          title={`Zoomed OpenStreetMap view of ${zoomDestination.name}`}
+          loading="lazy"
+        />
+      )}
 
-      const box = new THREE.Box3().setFromObject(model)
-      const center = box.getCenter(new THREE.Vector3())
-      const size = box.getSize(new THREE.Vector3())
-      const maxSize = Math.max(size.x, size.y, size.z) || 1
+      {showFocusMarker && (
+        <span className="map-destination-marker" aria-hidden="true" />
+      )}
 
-      model.position.sub(center)
-      model.scale.setScalar(2.25 / maxSize)
+      {showSettledMarker && (
+        <span
+          className="map-destination-marker map-destination-marker-static"
+          aria-hidden="true"
+        />
+      )}
 
-      if (quickEarth) {
-        earthGroup.remove(quickEarth)
-        quickEarth.geometry.dispose()
-        quickEarth.material.dispose()
-        quickEarth = null
-      }
+      <div className="map-focus-label">
+        <span>
+          {selectedDestination.isOverview ? "Start exploring" : "Now viewing"}
+        </span>
 
-      earth = model
-      earthGroup.add(model)
-    }
-
-    const initGlobe = async () => {
-      THREE = await import('three')
-
-      if (!isMounted) {
-        return
-      }
-
-      scene = new THREE.Scene()
-      camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100)
-      camera.position.set(0, 0, 4.1)
-
-      renderer = new THREE.WebGLRenderer({
-        alpha: true,
-        antialias: false,
-        canvas,
-        powerPreference: 'high-performance',
-        premultipliedAlpha: false,
-      })
-
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.35))
-      renderer.outputColorSpace = THREE.SRGBColorSpace
-      renderer.setClearColor(0x000000, 0)
-
-      earthGroup = new THREE.Group()
-      earthGroup.rotation.set(0.08, -0.45, -0.18)
-      scene.add(earthGroup)
-
-      const hemiLight = new THREE.HemisphereLight(0xffffff, 0x223366, 2.2)
-      scene.add(hemiLight)
-
-      const keyLight = new THREE.DirectionalLight(0xffffff, 2.6)
-      keyLight.position.set(-2.2, 2.4, 4)
-      scene.add(keyLight)
-
-      const rimLight = new THREE.DirectionalLight(0x82c7ff, 1.15)
-      rimLight.position.set(2.5, -0.4, -2.5)
-      scene.add(rimLight)
-
-      quickEarth = new THREE.Mesh(
-        new THREE.SphereGeometry(1.12, 48, 32),
-        new THREE.MeshStandardMaterial({
-          color: 0x2f92c9,
-          emissive: new THREE.Color(0x1a5f9d),
-          emissiveIntensity: 0.12,
-          roughness: 0.86,
-          metalness: 0,
-        }),
-      )
-      earthGroup.add(quickEarth)
-
-      resizeObserver = new ResizeObserver(resize)
-      resizeObserver.observe(frame)
-      resize()
-
-      const animate = () => {
-        earthGroup.rotation.y += 0.00125
-
-        if (earth) {
-          earth.rotation.y += 0.00035
-        }
-
-        renderer.render(scene, camera)
-        animationFrame = requestAnimationFrame(animate)
-      }
-
-      animate()
-
-      const colorMap = await new THREE.TextureLoader().loadAsync('/earth-desktop-model/textures/Earth_ALB.png')
-
-      if (!isMounted) {
-        colorMap.dispose()
-        return
-      }
-
-      colorMap.colorSpace = THREE.SRGBColorSpace
-      colorMap.generateMipmaps = false
-      colorMap.minFilter = THREE.LinearFilter
-      disposables.push(colorMap)
-
-      quickEarth.material.map = colorMap
-      quickEarth.material.needsUpdate = true
-      loadDetailedModel()
-    }
-
-    initGlobe()
-
-    return () => {
-      isMounted = false
-      cancelAnimationFrame(animationFrame)
-      resizeObserver?.disconnect()
-
-      if (idleTask) {
-        if (window.cancelIdleCallback) {
-          window.cancelIdleCallback(idleTask)
-        } else {
-          window.clearTimeout(idleTask)
-        }
-      }
-
-      if (quickEarth) {
-        disposeObject(quickEarth)
-      }
-
-      if (earth) {
-        disposeObject(earth)
-      }
-
-      disposables.forEach((disposable) => disposable.dispose())
-      renderer?.dispose()
-      earthGroup?.clear()
-    }
-  }, [])
-
-  return <canvas ref={canvasRef} className="earth-canvas" aria-label="Rotating 3D Earth" />
+        <strong>
+          {selectedDestination.isOverview
+            ? "Choose a destination"
+            : `${selectedDestination.name}, ${selectedDestination.country}`}
+        </strong>
+      </div>
+    </div>
+  );
 }
 
 function ExploreWorld() {
-  const benefitListRef = useRef(null)
-  const [isVisible, setIsVisible] = useState(false)
+  const [selectedDestination, setSelectedDestination] = useState(worldView);
+
+  const [mapDestination, setMapDestination] = useState(worldView);
+
+  const [zoomDestination, setZoomDestination] = useState(null);
+
+  const [isZooming, setIsZooming] = useState(false);
 
   useEffect(() => {
-    const benefitList = benefitListRef.current
+    if (!isZooming) return undefined;
 
-    if (!benefitList) {
-      return undefined
+    const zoomTimer = window.setTimeout(() => {
+      setMapDestination(zoomDestination);
+      setIsZooming(false);
+      setZoomDestination(null);
+    }, 2200);
+
+    return () => window.clearTimeout(zoomTimer);
+  }, [isZooming, zoomDestination]);
+
+  const focusDestination = (destination) => {
+    if (destination.name === selectedDestination.name && !isZooming) {
+      return;
     }
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.disconnect()
-        }
-      },
-      {
-        rootMargin: '0px 0px -18% 0px',
-        threshold: 0.22,
-      },
-    )
+    setSelectedDestination(destination);
+    setMapDestination(worldView);
+    setZoomDestination(destination);
 
-    observer.observe(benefitList)
-
-    return () => observer.disconnect()
-  }, [])
+    window.requestAnimationFrame(() => setIsZooming(true));
+  };
 
   return (
     <section className="explore-section">
-      <h2>Explore the world with us</h2>
+      <div className="explore-header">
+        <h2>Explore The World With Us</h2>
+      </div>
 
       <div className="explore-content">
-        <div className="globe-frame" aria-hidden="true">
-          <EarthModel />
-          <span className="plane-orbit">
-            <img src={planeImage} alt="" />
-          </span>
-        </div>
+        <WorldMap
+          mapDestination={mapDestination}
+          selectedDestination={selectedDestination}
+          zoomDestination={zoomDestination}
+          isZooming={isZooming}
+        />
 
-        <ol ref={benefitListRef} className={`benefit-list${isVisible ? ' is-visible' : ''}`}>
-          {benefits.map((benefit, index) => (
-            <li key={benefit} style={{ '--reveal-delay': `${index * 420}ms` }}>
-              <span>{index + 1}</span>
-              {benefit}
-            </li>
-          ))}
-        </ol>
+        <div className="destination-zoom-panel">
+          <h3>Prime Holiday Spot</h3>
+
+          <div className="destination-zoom-list">
+            {destinations.map((destination) => (
+              <button
+                className={
+                  destination.name === selectedDestination.name
+                    ? "is-active"
+                    : ""
+                }
+                type="button"
+                onClick={() => focusDestination(destination)}
+                key={destination.name}
+              >
+                <span className="destination-card-pin" aria-hidden="true" />
+
+                <span className="destination-card-copy">
+                  <span>{destination.name}</span>
+                  <small>{destination.country}</small>
+                </span>
+
+                <span className="destination-card-meta">
+                  <span>{destination.mood}</span>
+                  <small>{destination.duration}</small>
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
-  )
+  );
 }
 
-export default ExploreWorld
+export default ExploreWorld;

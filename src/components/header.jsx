@@ -8,7 +8,7 @@ const navItems = [
     href: '#destinations',
     key: 'destinations',
   },
-  { label: 'Bookings', href: '#bookings', key: 'bookings' }, // stories ko pages haru sabai bookings xa hai
+  { label: 'Stories', href: '#stories', key: 'stories' },
   {
     label: 'Support',
     href: '#support',
@@ -31,7 +31,7 @@ function Header({ activePage = 'home', onNavigate, variant = 'hero' }) {
   const navigate = (event, key) => {
     setActiveNav(key)
 
-    if ((key === 'home' || key === 'destinations' || key === 'bookings' || key === 'support-contact' || key === 'about') && onNavigate) {
+    if ((key === 'home' || key === 'destinations' || key === 'stories' || key === 'support-contact' || key === 'about') && onNavigate) {
       event.preventDefault()
       onNavigate(key)
       window.scrollTo({ top: 0, behavior: 'smooth' })
