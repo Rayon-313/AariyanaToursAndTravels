@@ -31,9 +31,9 @@ function Header({ activePage = 'home', onNavigate, variant = 'hero' }) {
   const navigate = (event, key) => {
     setActiveNav(key)
 
-    if ((key === 'home' || key === 'destinations' || key === 'stories' || key === 'support-contact' || key === 'about') && onNavigate) {
+    if ((key === 'home' || key === 'destinations' || key === 'stories' || key === 'support' || key === 'support-contact' || key === 'about') && onNavigate) {
       event.preventDefault()
-      onNavigate(key)
+      onNavigate(key === 'support' ? 'support-contact' : key)
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }
@@ -77,7 +77,9 @@ function Header({ activePage = 'home', onNavigate, variant = 'hero' }) {
       </p>
 
       <form className="destination-search" onSubmit={searchDestinations}>
-        <span className="search-icon" aria-hidden="true" />
+        <button className="search-submit-icon" type="submit" aria-label="Search destinations">
+          <span className="search-icon" aria-hidden="true" />
+        </button>
         <input
           type="search"
           placeholder="Search destinations..."

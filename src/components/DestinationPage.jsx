@@ -1,8 +1,8 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Header from './header'
 import SiteFooter from './SiteFooter'
 
-const regions = ['Southeast Asia', 'Europe', 'Middle East', 'Oceania']
+export const regions = ['Southeast Asia', 'Europe', 'Middle East', 'Oceania']
 
 export const baseDestinations = [
   { title: 'Bali, Indonesia', price: 'Rs. 3,999', priceValue: 3999, rating: '4.9', region: 'Southeast Asia', imageIndex: 0 },
@@ -15,13 +15,19 @@ export const baseDestinations = [
   { title: 'Kyoto Cultural Tour', price: 'Rs. 3,299', priceValue: 3299, rating: '4.8', region: 'Southeast Asia', imageIndex: 7 },
 ]
 
-function DestinationPage({ images, onNavigate, onViewDetails, searchQuery = '' }) {
+function DestinationPage({ images, onNavigate, onViewDetails, searchQuery = '', selectedRegion = '' }) {
   const [heroImage] = images
-  const [selectedRegions, setSelectedRegions] = useState(regions)
+  const [selectedRegions, setSelectedRegions] = useState(() =>
+    selectedRegion && regions.includes(selectedRegion) ? [selectedRegion] : regions,
+  )
   const [maxBudget, setMaxBudget] = useState(3999)
   const [extraCount, setExtraCount] = useState(0)
   const hasLoadedMore = extraCount > 0
   const normalizedSearchQuery = searchQuery.trim().toLowerCase()
+
+  useEffect(() => {
+    setSelectedRegions(selectedRegion && regions.includes(selectedRegion) ? [selectedRegion] : regions)
+  }, [selectedRegion])
 
   const destinationPool = useMemo(
     () => {

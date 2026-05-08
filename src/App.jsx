@@ -33,6 +33,7 @@ function App() {
   const [page, setPage] = useState('home');
   const [selectedTrip, setSelectedTrip] = useState(null);
   const [destinationSearch, setDestinationSearch] = useState('');
+  const [destinationRegion, setDestinationRegion] = useState('');
 
   useEffect(() => {
     if ("scrollRestoration" in window.history) {
@@ -45,6 +46,7 @@ function App() {
       setPage(initialState.page);
       setSelectedTrip(initialState.trip || null);
       setDestinationSearch(initialState.page === 'destinations' ? initialState.searchQuery || '' : '');
+      setDestinationRegion(initialState.page === 'destinations' ? initialState.region || '' : '');
     } else {
       window.history.replaceState({ page: "home", trip: null }, "", "#home");
     }
@@ -58,6 +60,7 @@ function App() {
       setPage(historyPage);
       setSelectedTrip(event.state?.trip || null);
       setDestinationSearch(historyPage === 'destinations' ? event.state?.searchQuery || '' : '');
+      setDestinationRegion(historyPage === 'destinations' ? event.state?.region || '' : '');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
@@ -68,9 +71,10 @@ function App() {
   const navigateTo = (nextPage, options = {}) => {
     setSelectedTrip(null);
     setDestinationSearch(nextPage === 'destinations' ? options.searchQuery || '' : '');
+    setDestinationRegion(nextPage === 'destinations' ? options.region || '' : '');
     setPage(nextPage);
     window.history.pushState(
-      { page: nextPage, trip: null, searchQuery: options.searchQuery || '' },
+      { page: nextPage, trip: null, searchQuery: options.searchQuery || '', region: options.region || '' },
       "",
       `#${nextPage}`
     );
@@ -92,6 +96,7 @@ function App() {
           onNavigate={navigateTo}
           onViewDetails={openTripDetail}
           searchQuery={destinationSearch}
+          selectedRegion={destinationRegion}
         />
         <WhatsAppButton />
       </main>
