@@ -4,7 +4,7 @@ import SiteFooter from './SiteFooter'
 
 const regions = ['Southeast Asia', 'Europe', 'Middle East', 'Oceania']
 
-const baseDestinations = [
+export const baseDestinations = [
   { title: 'Bali, Indonesia', price: 'Rs. 3,999', priceValue: 3999, rating: '4.9', region: 'Southeast Asia', imageIndex: 0 },
   { title: 'India Golden Triangle', price: 'Rs. 1,999', priceValue: 1999, rating: '4.8', region: 'Southeast Asia', imageIndex: 1 },
   { title: 'Bhutan Happiness Trail', price: 'Rs. 2,599', priceValue: 2599, rating: '4.9', region: 'Southeast Asia', imageIndex: 2 },
