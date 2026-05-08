@@ -11,8 +11,8 @@ const navItems = [
   { label: 'Stories', href: '#stories', key: 'stories' },
   {
     label: 'Support',
-    href: '#support',
-    key: 'support',
+    // href: '#support',
+    // key: 'support',
     menu: [
       { label: 'About Us', href: '#about', key: 'about' },
       { label: 'Ask for help / Contact us', href: '#support-contact', key: 'support-contact' },
@@ -31,7 +31,7 @@ function Header({ activePage = 'home', onNavigate, variant = 'hero' }) {
   const navigate = (event, key) => {
     setActiveNav(key)
 
-    if ((key === 'home' || key === 'destinations' || key === 'stories' || key === 'support' || key === 'support-contact' || key === 'about') && onNavigate) {
+    if ((key === 'home' || key === 'destinations' || key === 'stories'  || key === 'support-contact' || key === 'about') && onNavigate) {
       event.preventDefault()
       onNavigate(key === 'support' ? 'support-contact' : key)
       window.scrollTo({ top: 0, behavior: 'smooth' })
