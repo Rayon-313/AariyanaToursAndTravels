@@ -59,7 +59,16 @@ function Home({ images, onNavigate }) {
   <h1>Experience The Magic</h1>
   <form className="booking-search">
     {filters.map((filter) => (
-      <div key={filter} className="filter-button custom-dropdown">
+      <div 
+        key={filter} 
+        className="filter-button custom-dropdown"
+        
+        onClick={() => {
+          if (filter === "Choose Package") {
+            onNavigate("destinations");
+          }
+        }}
+      >
         {filter === "Choose Destination" ? (
           <>
             <div className="dropdown-label">
@@ -70,7 +79,10 @@ function Home({ images, onNavigate }) {
               {baseDestinations.map((dest, index) => (
                 <li 
                   key={index} 
-                  onClick={() => onNavigate("destinations", { searchQuery: dest.title })}
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevents triggering parent onClick
+                    onNavigate("destinations", { searchQuery: dest.title });
+                  }}
                 >
                   {dest.title}
                 </li>
@@ -78,25 +90,24 @@ function Home({ images, onNavigate }) {
             </ul>
           </>
         ) : (
-         
           <div className="select-wrapper">
-            <select className="filter-dropdown">
-              <option value="">{filter}</option>
-              {filter === "Choose Package" && (
-                <>
-                  <option>Standard</option>
-                  <option>Premium</option>
-                  <option>Luxury</option>
-                </>
-              )}
-              {filter === "Choose Duration" && (
-                <>
-                  <option>3 Days</option>
-                  <option>5 Days</option>
-                  <option>7 Days</option>
-                </>
-              )}
-            </select>
+            {/* If it is Choose Package, we render a div that looks like a select but is just text */}
+            {filter === "Choose Package" ? (
+              <div className="filter-dropdown" style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                {filter}
+              </div>
+            ) : (
+              <select className="filter-dropdown">
+                <option value="">{filter}</option>
+                {filter === "Choose Duration" && (
+                  <>
+                    <option>3 Days</option>
+                    <option>5 Days</option>
+                    <option>7 Days</option>
+                  </>
+                )}
+              </select>
+            )}
             <span className="filter-chevron" aria-hidden="true" />
           </div>
         )}
