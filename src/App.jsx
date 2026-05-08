@@ -158,7 +158,11 @@ function App() {
 
   return (
     <main className="site-shell">
-      <Home images={destinationImages} onNavigate={navigateTo} />
+      <Home
+        images={destinationImages}
+        onNavigate={navigateTo}
+        onViewDetails={openTripDetail}
+      />
       <ExploreWorld />
       <TravellerSay />
       <TrendingDestination
