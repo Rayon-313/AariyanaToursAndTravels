@@ -4,6 +4,11 @@ import SiteFooter from './SiteFooter'
 import ebcImage from '../assets/ebc.webp'
 import abcImage from '../assets/abc.avif'
 import langtangImage from '../assets/langtang.webp'
+import singaporeCityImage from '../assets/singaporecity.jpg'
+import dubaiDesertImage from '../assets/dubaidesert.jpg'
+import bhutanThimphuImage from '../assets/bhutanthimpu.webp'
+import pokharaNepalImage from '../assets/pokharanepal.avif'
+import chitwanImage from '../assets/chitwan.jpg'
 
 export const regions = ['Indonesia', 'Vietnam', 'Thailand', 'Singapore', 'Dubai', 'Bhutan', 'Nepal', 'Trek']
 
@@ -20,14 +25,11 @@ export const baseDestinations = [
   { title: 'Bangkok & Pattaya, Thailand', duration: '7 days & 6 nights', price: 'Rs. 2,899', priceValue: 2899, rating: '4.8', region: 'Thailand', imageIndex: 12 },
   { title: 'Bangkok & Pattaya, Thailand', duration: '6 days & 5 nights', price: 'Rs. 2,599', priceValue: 2599, rating: '4.8', region: 'Thailand', imageIndex: 11 },
   { title: 'Bangkok & Pattaya, Thailand', duration: '5 days & 4 nights', price: 'Rs. 2,299', priceValue: 2299, rating: '4.7', region: 'Thailand', imageIndex: 10 },
-  { title: 'Singapore City Lights', duration: '5 days & 4 nights', price: 'Rs. 3,299', priceValue: 3299, rating: '4.8', region: 'Singapore', imageIndex: 5 },
-  { title: 'Singapore Sentosa Getaway', duration: '4 days & 3 nights', price: 'Rs. 2,899', priceValue: 2899, rating: '4.7', region: 'Singapore', imageIndex: 6 },
-  { title: 'Dubai Skyline Break', duration: '6 days & 5 nights', price: 'Rs. 4,499', priceValue: 4499, rating: '4.9', region: 'Dubai', imageIndex: 7 },
-  { title: 'Dubai Desert & Marina Tour', duration: '5 days & 4 nights', price: 'Rs. 3,999', priceValue: 3999, rating: '4.8', region: 'Dubai', imageIndex: 0 },
-  { title: 'Thimphu & Paro, Bhutan', duration: '6 days & 5 nights', price: 'Rs. 3,799', priceValue: 3799, rating: '4.9', region: 'Bhutan', imageIndex: 1 },
-  { title: 'Bhutan Tiger Nest Trail', duration: '5 days & 4 nights', price: 'Rs. 3,299', priceValue: 3299, rating: '4.8', region: 'Bhutan', imageIndex: 2 },
-  { title: 'Kathmandu & Pokhara, Nepal', duration: '6 days & 5 nights', price: 'Rs. 2,499', priceValue: 2499, rating: '4.8', region: 'Nepal', imageIndex: 3 },
-  { title: 'Chitwan Jungle Safari, Nepal', duration: '4 days & 3 nights', price: 'Rs. 1,999', priceValue: 1999, rating: '4.7', region: 'Nepal', imageIndex: 4 },
+  { title: 'Singapore City Lights', duration: '5 days & 4 nights', price: 'Rs. 3,299', priceValue: 3299, rating: '4.8', region: 'Singapore', imageIndex: 5, image: singaporeCityImage },
+  { title: 'Dubai Desert & Marina Tour', duration: '5 days & 4 nights', price: 'Rs. 3,999', priceValue: 3999, rating: '4.8', region: 'Dubai', imageIndex: 0, image: dubaiDesertImage },
+  { title: 'Thimphu & Paro, Bhutan', duration: '6 days & 5 nights', price: 'Rs. 3,799', priceValue: 3799, rating: '4.9', region: 'Bhutan', imageIndex: 1, image: bhutanThimphuImage },
+  { title: 'Kathmandu & Pokhara, Nepal', duration: '6 days & 5 nights', price: 'Rs. 2,499', priceValue: 2499, rating: '4.8', region: 'Nepal', imageIndex: 3, image: pokharaNepalImage },
+  { title: 'Chitwan Jungle Safari, Nepal', duration: '4 days & 3 nights', price: 'Rs. 1,999', priceValue: 1999, rating: '4.7', region: 'Nepal', imageIndex: 4, image: chitwanImage },
   { title: 'Everest Base Camp Trek', duration: '14 days & 13 nights', price: 'Rs. 6,499', priceValue: 6499, rating: '4.9', region: 'Trek', imageIndex: 5, image: ebcImage },
   { title: 'Annapurna Base Camp Trek', duration: '11 days & 10 nights', price: 'Rs. 4,999', priceValue: 4999, rating: '4.8', region: 'Trek', imageIndex: 6, image: abcImage },
   { title: 'Langtang Valley Trek', duration: '8 days & 7 nights', price: 'Rs. 3,499', priceValue: 3499, rating: '4.7', region: 'Trek', imageIndex: 7, image: langtangImage },
@@ -81,8 +83,6 @@ function DestinationPage({ images, onNavigate, onViewDetails, searchQuery = '', 
     selectedRegion && regions.includes(selectedRegion) ? [selectedRegion] : regions,
   )
   const [maxBudget, setMaxBudget] = useState(budgetMax)
-  const [extraCount, setExtraCount] = useState(0)
-  const hasLoadedMore = extraCount > 0
   const normalizedSearchQuery = searchQuery.trim().toLowerCase()
 
   useEffect(() => {
@@ -90,25 +90,12 @@ function DestinationPage({ images, onNavigate, onViewDetails, searchQuery = '', 
   }, [selectedRegion])
 
   const destinationPool = useMemo(
-    () => {
-      const repeatedFirstRow = Array.from({ length: extraCount }, (_, index) => {
-        const destination = baseDestinations[index % baseDestinations.length]
-
-        return {
-          ...destination,
-          key: `loaded-${destination.region}-${destination.price}-${index}`,
-        }
-      })
-
-      return [
-        ...baseDestinations.map((destination, index) => ({
-          ...destination,
-          key: `base-${destination.region}-${destination.price}-${index}`,
-        })),
-        ...repeatedFirstRow,
-      ]
-    },
-    [extraCount],
+    () =>
+      baseDestinations.map((destination, index) => ({
+        ...destination,
+        key: `base-${destination.region}-${destination.price}-${index}`,
+      })),
+    [],
   )
 
   const filteredDestinations = destinationPool
@@ -133,7 +120,6 @@ function DestinationPage({ images, onNavigate, onViewDetails, searchQuery = '', 
   const clearFilters = () => {
     setSelectedRegions([])
     setMaxBudget(budgetMax)
-    setExtraCount(0)
   }
 
   return (
@@ -235,15 +221,6 @@ function DestinationPage({ images, onNavigate, onViewDetails, searchQuery = '', 
             <p className="empty-destination-message">No destinations match those filters.</p>
           )}
 
-          <button
-            className="load-destinations-button"
-            type="button"
-            onClick={() => setExtraCount(4)}
-            disabled={hasLoadedMore}
-          >
-            {hasLoadedMore ? 'All Destinations Loaded' : 'Load More Destinations'}
-            <span aria-hidden="true" />
-          </button>
         </section>
       </main>
 
