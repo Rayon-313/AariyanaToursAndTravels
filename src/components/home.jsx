@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Header from "./header";
-import { baseDestinations } from "./DestinationPage";
+import { baseDestinations, getDestinationImage } from "./DestinationPage";
 
 // Select Banner Manually
 import banner1 from "../assets/0a9fa572-3c0b-47f8-ad7b-a20b30a5a88f.jpg";
@@ -9,7 +9,8 @@ import banner3 from "../assets/d8a40a5f-73da-41dd-9fbc-c7a5a7289c14.jpg";
 import banner4 from "../assets/56a87116-9e51-414f-9e59-a9056595db4b.jpg";
 import banner5 from "../assets/b4052342-1379-48ae-87d9-83d6b67b7317.jpg";
 
-const filters = ["Choose Destination", "Choose Package", "Choose Duration"];
+const filters = ["Choose Destination", "Choose Package", "Choose Trek"];
+const trekDestinations = baseDestinations.filter((destination) => destination.region === "Trek");
 
 function Home({ images, onNavigate, onViewDetails }) {
   // For adding the banner
@@ -68,49 +69,44 @@ function Home({ images, onNavigate, onViewDetails }) {
           }
         }}
       >
-        {filter === "Choose Destination" ? (
+        {filter === "Choose Destination" || filter === "Choose Trek" ? (
           <>
             <div className="dropdown-label">
               <span>{filter}</span>
               <span className="filter-chevron" aria-hidden="true" />
             </div>
             <ul className="dropdown-list">
-              {baseDestinations.map((dest, index) => (
+              {(filter === "Choose Trek" ? trekDestinations : baseDestinations).map((dest, index) => (
                 <li 
                   key={index} 
                   onClick={(e) => {
                     e.stopPropagation(); // Prevents triggering parent onClick
-                    onViewDetails({
-                      title: dest.title,
-                      location: dest.region,
-                      price: dest.price,
-                      rating: dest.rating,
-                      image: images[dest.imageIndex % images.length],
-                      source: "destination",
-                    });
+                    if (onViewDetails) {
+                      onViewDetails({
+                        title: dest.title,
+                        location: dest.region,
+                        price: dest.price,
+                        rating: dest.rating,
+                        duration: dest.duration,
+                        image: getDestinationImage(dest, images),
+                        source: "destination",
+                      });
+                      return;
+                    }
+
+                    onNavigate("destinations", { searchQuery: `${dest.title} ${dest.duration}` });
                   }}
                 >
-                  {dest.title}
+                  {dest.title} - {dest.duration}
                 </li>
               ))}
             </ul>
           </>
         ) : (
           <div className="select-wrapper">
-            {/* If it is Choose Package, we render a div that looks like a select but is just text */}
-            {filter === "Choose Package" ? (
-              <div className="filter-dropdown" style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-                {filter}
-              </div>
-            ) : (
-              <select className="filter-dropdown">
-                <option value="">{filter}</option>
-                {filter === "Choose Region" && (
-                  <></>
-                )}
-              </select>
-            )}
-            <span className="filter-chevron" aria-hidden="true" />
+            <div className="filter-dropdown">
+              {filter}
+            </div>
           </div>
         )}
       </div>

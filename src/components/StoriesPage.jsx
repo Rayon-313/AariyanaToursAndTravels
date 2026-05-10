@@ -63,7 +63,7 @@ function StoriesPage({ onNavigate, onViewItinerary }) {
       <section className="destination-page-hero bookings-page-hero">
         <img className="destination-page-hero-image" src={heroImage} alt="Hero" />
         <div className="destination-page-hero-overlay" />
-        <Header activePage="bookings" onNavigate={onNavigate} />
+        <Header activePage="stories" onNavigate={onNavigate} />
       </section>
 
       <main className="bookings-page-main" id="bookings">

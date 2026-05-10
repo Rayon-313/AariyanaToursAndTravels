@@ -1,26 +1,86 @@
 import { useEffect, useMemo, useState } from 'react'
 import Header from './header'
 import SiteFooter from './SiteFooter'
+import ebcImage from '../assets/ebc.webp'
+import abcImage from '../assets/abc.avif'
+import langtangImage from '../assets/langtang.webp'
 
-export const regions = ['Southeast Asia', 'Europe', 'Middle East', 'Oceania']
+export const regions = ['Indonesia', 'Vietnam', 'Thailand', 'Singapore', 'Dubai', 'Bhutan', 'Nepal', 'Trek']
 
 export const baseDestinations = [
-  { title: 'Bali, Indonesia', price: 'Rs. 3,999', priceValue: 3999, rating: '4.9', region: 'Southeast Asia', imageIndex: 0 },
-  { title: 'India Golden Triangle', price: 'Rs. 1,999', priceValue: 1999, rating: '4.8', region: 'Southeast Asia', imageIndex: 1 },
-  { title: 'Bhutan Happiness Trail', price: 'Rs. 2,599', priceValue: 2599, rating: '4.9', region: 'Southeast Asia', imageIndex: 2 },
-  { title: 'Tibet Himalayan Route', price: 'Rs. 3,599', priceValue: 3599, rating: '4.8', region: 'Southeast Asia', imageIndex: 3 },
-  { title: 'Amalfi Coast, Italy', price: 'Rs. 2,299', priceValue: 2299, rating: '4.9', region: 'Europe', imageIndex: 4 },
-  { title: 'Dubai Skyline Break', price: 'Rs. 3,499', priceValue: 3499, rating: '4.8', region: 'Middle East', imageIndex: 5 },
-  { title: 'Maldives Island Hopping', price: 'Rs. 3,899', priceValue: 3899, rating: '4.9', region: 'Oceania', imageIndex: 6 },
-  { title: 'Kyoto Cultural Tour', price: 'Rs. 3,299', priceValue: 3299, rating: '4.8', region: 'Southeast Asia', imageIndex: 7 },
+  { title: 'Bali, Indonesia', duration: '7 days & 6 nights', price: 'Rs. 3,999', priceValue: 3999, rating: '4.9', region: 'Indonesia', imageIndex: 0 },
+  { title: 'Bali, Indonesia', duration: '6 days & 5 nights', price: 'Rs. 3,499', priceValue: 3499, rating: '4.8', region: 'Indonesia', imageIndex: 3 },
+  { title: 'Bali, Indonesia', duration: '5 days & 4 nights', price: 'Rs. 2,999', priceValue: 2999, rating: '4.8', region: 'Indonesia', imageIndex: 4 },
+  { title: 'Ho Chi Minh City, Vietnam', duration: '7 days & 6 nights', price: 'Rs. 2,499', priceValue: 2499, rating: '4.8', region: 'Vietnam', imageIndex: 1 },
+  { title: 'Ho Chi Minh City, Vietnam', duration: '6 days & 5 nights', price: 'Rs. 2,199', priceValue: 2199, rating: '4.7', region: 'Vietnam', imageIndex: 6 },
+  { title: 'Ho Chi Minh City, Vietnam', duration: '5 days & 4 nights', price: 'Rs. 1,999', priceValue: 1999, rating: '4.7', region: 'Vietnam', imageIndex: 7 },
+  { title: 'Hanoi, Vietnam', duration: '7 days & 6 nights', price: 'Rs. 2,699', priceValue: 2699, rating: '4.8', region: 'Vietnam', imageIndex: 8 },
+  { title: 'Hanoi, Vietnam', duration: '6 days & 5 nights', price: 'Rs. 2,399', priceValue: 2399, rating: '4.7', region: 'Vietnam', imageIndex: 9 },
+  { title: 'Hanoi, Vietnam', duration: '5 days & 4 nights', price: 'Rs. 2,099', priceValue: 2099, rating: '4.7', region: 'Vietnam', imageIndex: 2 },
+  { title: 'Bangkok & Pattaya, Thailand', duration: '7 days & 6 nights', price: 'Rs. 2,899', priceValue: 2899, rating: '4.8', region: 'Thailand', imageIndex: 12 },
+  { title: 'Bangkok & Pattaya, Thailand', duration: '6 days & 5 nights', price: 'Rs. 2,599', priceValue: 2599, rating: '4.8', region: 'Thailand', imageIndex: 11 },
+  { title: 'Bangkok & Pattaya, Thailand', duration: '5 days & 4 nights', price: 'Rs. 2,299', priceValue: 2299, rating: '4.7', region: 'Thailand', imageIndex: 10 },
+  { title: 'Singapore City Lights', duration: '5 days & 4 nights', price: 'Rs. 3,299', priceValue: 3299, rating: '4.8', region: 'Singapore', imageIndex: 5 },
+  { title: 'Singapore Sentosa Getaway', duration: '4 days & 3 nights', price: 'Rs. 2,899', priceValue: 2899, rating: '4.7', region: 'Singapore', imageIndex: 6 },
+  { title: 'Dubai Skyline Break', duration: '6 days & 5 nights', price: 'Rs. 4,499', priceValue: 4499, rating: '4.9', region: 'Dubai', imageIndex: 7 },
+  { title: 'Dubai Desert & Marina Tour', duration: '5 days & 4 nights', price: 'Rs. 3,999', priceValue: 3999, rating: '4.8', region: 'Dubai', imageIndex: 0 },
+  { title: 'Thimphu & Paro, Bhutan', duration: '6 days & 5 nights', price: 'Rs. 3,799', priceValue: 3799, rating: '4.9', region: 'Bhutan', imageIndex: 1 },
+  { title: 'Bhutan Tiger Nest Trail', duration: '5 days & 4 nights', price: 'Rs. 3,299', priceValue: 3299, rating: '4.8', region: 'Bhutan', imageIndex: 2 },
+  { title: 'Kathmandu & Pokhara, Nepal', duration: '6 days & 5 nights', price: 'Rs. 2,499', priceValue: 2499, rating: '4.8', region: 'Nepal', imageIndex: 3 },
+  { title: 'Chitwan Jungle Safari, Nepal', duration: '4 days & 3 nights', price: 'Rs. 1,999', priceValue: 1999, rating: '4.7', region: 'Nepal', imageIndex: 4 },
+  { title: 'Everest Base Camp Trek', duration: '14 days & 13 nights', price: 'Rs. 6,499', priceValue: 6499, rating: '4.9', region: 'Trek', imageIndex: 5, image: ebcImage },
+  { title: 'Annapurna Base Camp Trek', duration: '11 days & 10 nights', price: 'Rs. 4,999', priceValue: 4999, rating: '4.8', region: 'Trek', imageIndex: 6, image: abcImage },
+  { title: 'Langtang Valley Trek', duration: '8 days & 7 nights', price: 'Rs. 3,499', priceValue: 3499, rating: '4.7', region: 'Trek', imageIndex: 7, image: langtangImage },
 ]
+
+export const getDestinationImage = (destination, images = []) => {
+  if (destination.image) {
+    return destination.image
+  }
+
+  if (!images.length) {
+    return ''
+  }
+
+  return images[destination.imageIndex % images.length]
+}
+
+const budgetMin = Math.min(...baseDestinations.map((destination) => destination.priceValue))
+const budgetMax = Math.max(...baseDestinations.map((destination) => destination.priceValue))
+
+const destinationOrder = new Map()
+
+baseDestinations.forEach((destination) => {
+  if (!destinationOrder.has(destination.title)) {
+    destinationOrder.set(destination.title, destinationOrder.size)
+  }
+})
+
+const getTripDays = (duration) => Number(duration.match(/\d+/)?.[0] || 0)
+
+const sortByCountryAndDuration = (firstDestination, secondDestination) => {
+  const regionDifference = regions.indexOf(firstDestination.region) - regions.indexOf(secondDestination.region)
+
+  if (regionDifference !== 0) {
+    return regionDifference
+  }
+
+  const destinationDifference =
+    destinationOrder.get(firstDestination.title) - destinationOrder.get(secondDestination.title)
+
+  if (destinationDifference !== 0) {
+    return destinationDifference
+  }
+
+  return getTripDays(firstDestination.duration) - getTripDays(secondDestination.duration)
+}
 
 function DestinationPage({ images, onNavigate, onViewDetails, searchQuery = '', selectedRegion = '' }) {
   const [heroImage] = images
   const [selectedRegions, setSelectedRegions] = useState(() =>
     selectedRegion && regions.includes(selectedRegion) ? [selectedRegion] : regions,
   )
-  const [maxBudget, setMaxBudget] = useState(3999)
+  const [maxBudget, setMaxBudget] = useState(budgetMax)
   const [extraCount, setExtraCount] = useState(0)
   const hasLoadedMore = extraCount > 0
   const normalizedSearchQuery = searchQuery.trim().toLowerCase()
@@ -32,7 +92,7 @@ function DestinationPage({ images, onNavigate, onViewDetails, searchQuery = '', 
   const destinationPool = useMemo(
     () => {
       const repeatedFirstRow = Array.from({ length: extraCount }, (_, index) => {
-        const destination = baseDestinations[index % 4]
+        const destination = baseDestinations[index % baseDestinations.length]
 
         return {
           ...destination,
@@ -51,14 +111,16 @@ function DestinationPage({ images, onNavigate, onViewDetails, searchQuery = '', 
     [extraCount],
   )
 
-  const filteredDestinations = destinationPool.filter((destination) => {
-    const regionMatches = selectedRegions.length === 0 || selectedRegions.includes(destination.region)
-    const searchMatches =
-      normalizedSearchQuery.length === 0 ||
-      `${destination.title} ${destination.region}`.toLowerCase().includes(normalizedSearchQuery)
+  const filteredDestinations = destinationPool
+    .filter((destination) => {
+      const regionMatches = selectedRegions.length === 0 || selectedRegions.includes(destination.region)
+      const searchMatches =
+        normalizedSearchQuery.length === 0 ||
+        `${destination.title} ${destination.region} ${destination.duration}`.toLowerCase().includes(normalizedSearchQuery)
 
-    return regionMatches && destination.priceValue <= maxBudget && searchMatches
-  })
+      return regionMatches && destination.priceValue <= maxBudget && searchMatches
+    })
+    .sort(sortByCountryAndDuration)
 
   const toggleRegion = (region) => {
     setSelectedRegions((currentRegions) =>
@@ -70,7 +132,7 @@ function DestinationPage({ images, onNavigate, onViewDetails, searchQuery = '', 
 
   const clearFilters = () => {
     setSelectedRegions([])
-    setMaxBudget(3999)
+    setMaxBudget(budgetMax)
     setExtraCount(0)
   }
 
@@ -79,7 +141,7 @@ function DestinationPage({ images, onNavigate, onViewDetails, searchQuery = '', 
       <section className="destination-page-hero">
         <img className="destination-page-hero-image" src={heroImage} alt="" />
         <div className="destination-page-hero-overlay" />
-        <Header activePage="destinations" onNavigate={onNavigate} />
+        <Header activePage={selectedRegion === 'Trek' ? 'trek' : 'destinations'} onNavigate={onNavigate} />
       </section>
 
       <main className="destination-page-main">
@@ -92,7 +154,7 @@ function DestinationPage({ images, onNavigate, onViewDetails, searchQuery = '', 
           </div>
 
           <section>
-            <h3>Region</h3>
+            <h3>Places & Experiences</h3>
             {regions.map((region) => (
               <label className="filter-check" key={region}>
                 <input
@@ -110,8 +172,8 @@ function DestinationPage({ images, onNavigate, onViewDetails, searchQuery = '', 
             <div className="budget-control">
               <input
                 type="range"
-                min="1999"
-                max="3999"
+                min={budgetMin}
+                max={budgetMax}
                 step="100"
                 value={maxBudget}
                 onChange={(event) => {
@@ -135,13 +197,13 @@ function DestinationPage({ images, onNavigate, onViewDetails, searchQuery = '', 
           <div className="destination-results-grid">
             {filteredDestinations.map((destination) => (
               <article className="destination-result-card" key={destination.key}>
-                <img src={images[destination.imageIndex % images.length]} alt="" />
+                <img src={getDestinationImage(destination, images)} alt="" />
                 <div className="result-card-body">
                   <div className="result-card-title">
                     <h2>{destination.title}</h2>
                     <span>{destination.rating}</span>
                   </div>
-                  <p>Explore whitewashed villages and crystal clear water of the place...</p>
+                  <p>{destination.duration}</p>
                 </div>
                 <div className="result-card-action">
                   <div>
@@ -156,7 +218,8 @@ function DestinationPage({ images, onNavigate, onViewDetails, searchQuery = '', 
                         location: destination.region,
                         price: destination.price,
                         rating: destination.rating,
-                        image: images[destination.imageIndex % images.length],
+                        duration: destination.duration,
+                        image: getDestinationImage(destination, images),
                         source: 'destination',
                       })
                     }

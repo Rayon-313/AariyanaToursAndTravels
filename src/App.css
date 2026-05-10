@@ -161,6 +161,7 @@ button {
   filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.18));
 }
 
+
 .offer {
   width: 170px;
   margin: 8px 0 0;
@@ -461,7 +462,9 @@ button {
 }
 
 .booking-search {
-display: flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: white;
   border-radius: 50px;
   padding: 10px 20px;
@@ -475,8 +478,9 @@ display: flex;
 .dropdown-label {
   padding: 12px 15px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  gap: 8px;
   cursor: pointer;
   color: var(--navy);
   font-weight: 500;
@@ -1687,9 +1691,12 @@ display: flex;
 }
 
 .result-card-title h2 {
+  flex: 1;
   color: #203052;
   font-size: 14px;
   font-weight: 900;
+  line-height: 1.25;
+  min-height: 36px;
 }
 
 .result-card-title span {
@@ -3982,9 +3989,9 @@ display: grid;
 }
 .filter-dropdown {
   border: none;
+  
   /* padding: 4px 10px; */
-  padding-top: 10px;
-  padding-bottom: 0px;
+  padding: 12px 15px;
   position: relative;
   color: #0b1740;
   width: 100%;
@@ -3992,6 +3999,10 @@ display: grid;
   font-size: 17px;
   font-weight: 500;
   background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 .filter-options {
   background-color: #00a82d;

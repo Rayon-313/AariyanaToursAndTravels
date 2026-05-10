@@ -1,43 +1,14 @@
 import DestinationCard from "./DestinationCard";
+import { baseDestinations, getDestinationImage } from "./DestinationPage";
 
-const choices = [
-  {
-    label: "Cultural",
-    title: "Amalfi Coast, Italy",
-    duration: "10 Days Tour",
-    price: "Rs 129999",
-  },
-  {
-    label: "Hot Deal",
-    title: "Bali, Indonesia",
-    duration: "7 Days Tour",
-    price: "Rs 89999",
-  },
-  {
-    label: "Popular",
-    title: "Bali, Indonesia",
-    duration: "7 Days Tour",
-    price: "Rs 89999",
-  },
-  {
-    label: "Cultural",
-    title: "Amalfi Coast, Italy",
-    duration: "10 Days Tour",
-    price: "Rs 129999",
-  },
-  {
-    label: "Hot Deal",
-    title: "Bali, Indonesia",
-    duration: "7 Days Tour",
-    price: "Rs 89999",
-  },
-  {
-    label: "Popular",
-    title: "Bali, Indonesia",
-    duration: "7 Days Tour",
-    price: "Rs 89999",
-  },
-];
+const labels = ["Popular", "Hot Deal", "Cultural", "Popular", "Hot Deal", "Cultural"];
+const choiceRegions = ["Vietnam", "Thailand", "Singapore", "Dubai", "Bhutan", "Nepal"];
+const choices = choiceRegions.map((region) =>
+  baseDestinations.find((destination) => destination.region === region),
+).filter(Boolean).map((destination, index) => ({
+  ...destination,
+  label: labels[index],
+}));
 
 function ChooseDestination({ images, onViewAll }) {
   return (
@@ -50,10 +21,10 @@ function ChooseDestination({ images, onViewAll }) {
       </div>
 
       <div className="destination-grid">
-        {choices.map((choice, index) => (
+        {choices.map((choice) => (
           <DestinationCard
-            key={index}
-            image={images[(index + 2) % images.length]}
+            key={`${choice.title}-${choice.duration}`}
+            image={getDestinationImage(choice, images)}
             {...choice}
           />
         ))}

@@ -1,4 +1,4 @@
- export const companyPhoneNumber = "9779823166813";
+ export const companyPhoneNumber = "+61478160445";
 function WhatsAppButton() {
  
   return (

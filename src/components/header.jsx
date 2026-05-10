@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import logoImage from '../assets/Logooo.png'
+import logoImage from '../assets/logooo.png'
 
 const navItems = [
   { label: 'Home', href: '#home', key: 'home' },
@@ -8,6 +8,7 @@ const navItems = [
     href: '#destinations',
     key: 'destinations',
   },
+  { label: 'Trek', href: '#trek', key: 'trek', region: 'Trek' },
   { label: 'Stories', href: '#stories', key: 'stories' },
   {
     label: 'Support',
@@ -31,9 +32,9 @@ function Header({ activePage = 'home', onNavigate, variant = 'hero' }) {
   const navigate = (event, key) => {
     setActiveNav(key)
 
-    if ((key === 'home' || key === 'destinations' || key === 'stories'  || key === 'support-contact' || key === 'about') && onNavigate) {
+    if ((key === 'home' || key === 'destinations' || key === 'trek' || key === 'stories'  || key === 'support-contact' || key === 'about') && onNavigate) {
       event.preventDefault()
-      onNavigate(key === 'support' ? 'support-contact' : key)
+      onNavigate(key === 'trek' ? 'destinations' : key === 'support' ? 'support-contact' : key, key === 'trek' ? { region: 'Trek' } : {})
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }

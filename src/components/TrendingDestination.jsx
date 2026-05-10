@@ -1,13 +1,15 @@
 import DestinationCard from './DestinationCard'
+import { baseDestinations, getDestinationImage } from './DestinationPage'
 
-const destinations = [
-  { label: 'Cultural', title: 'Amalfi Coast, Italy', duration: '10 Days Tour', price: 'Rs 129999' },
-  { label: 'Hot Deal', title: 'Bali, Indonesia', duration: '7 Days Tour', price: 'Rs 89999' },
-  { label: 'Popular', title: 'Bali, Indonesia', duration: '7 Days Tour', price: 'Rs 89999', featured: true },
-  { label: 'Cultural', title: 'Amalfi Coast, Italy', duration: '10 Days Tour', price: 'Rs 129999' },
-  { label: 'Hot Deal', title: 'Bali, Indonesia', duration: '7 Days Tour', price: 'Rs 89999' },
-  { label: 'Popular', title: 'Bali, Indonesia', duration: '7 Days Tour', price: 'Rs 89999' },
-]
+const labels = ['Popular', 'Hot Deal', 'Popular', 'Cultural', 'Hot Deal', 'Popular']
+const featuredRegions = ['Indonesia', 'Singapore', 'Dubai', 'Bhutan', 'Nepal', 'Trek']
+const destinations = featuredRegions.map((region) =>
+  baseDestinations.find((destination) => destination.region === region),
+).filter(Boolean).map((destination, index) => ({
+  ...destination,
+  label: labels[index],
+  featured: index === 2,
+}))
 
 function TrendingDestination({ images, onViewAll }) {
   return (
@@ -18,8 +20,8 @@ function TrendingDestination({ images, onViewAll }) {
       </div>
 
       <div className="destination-grid">
-        {destinations.map((destination, index) => (
-          <DestinationCard key={index} image={images[index % images.length]} {...destination} />
+        {destinations.map((destination) => (
+          <DestinationCard key={`${destination.title}-${destination.duration}`} image={getDestinationImage(destination, images)} {...destination} />
         ))}
       </div>
     </section>
