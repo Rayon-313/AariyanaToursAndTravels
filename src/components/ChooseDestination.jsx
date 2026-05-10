@@ -1,5 +1,5 @@
 import DestinationCard from "./DestinationCard";
-import { baseDestinations, getDestinationImage } from "./DestinationPage";
+import { baseDestinations, getDestinationImage } from "./destinationData";
 
 const labels = ["Popular", "Hot Deal", "Cultural", "Popular", "Hot Deal", "Cultural"];
 const choiceRegions = ["Vietnam", "Thailand", "Singapore", "Dubai", "Bhutan", "Nepal"];

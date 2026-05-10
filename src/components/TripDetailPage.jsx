@@ -2,6 +2,7 @@ import { useState } from "react";
 import Header from "./header";
 import SiteFooter from "./SiteFooter";
 import { companyPhoneNumber } from "./WhatsAppButton";
+import { getDetailPageReviews } from "./reviewData";
 
 const defaultTrip = {
   title: "Bali Tour",
@@ -14,7 +15,7 @@ const defaultTrip = {
   label: "Best Seller",
 };
 
-const itinerary = [
+const defaultItinerary = [
   {
     title: "Arrival & Relaxation",
     text: "Land in Ngurah Rai International Airport and head to your hotel in Seminyak or Nusa Dua. Spend the day settling in by the beach, enjoying sunset views, and trying local Balinese food.",
@@ -30,19 +31,6 @@ const itinerary = [
   {
     title: "Adventure or Island Trip",
     text: "Choose between water activities, snorkeling around the Nusa islands, or a day trip to Nusa Penida for dramatic cliffs and beaches.",
-  },
-];
-
-const reviews = [
-  {
-    name: "Sarah Davis",
-    date: "October 2025",
-    text: "Aariyana Tours made our honeymoon absolutely perfect. Every detail of our Bali trip was handled with such professionalism.",
-  },
-  {
-    name: "Samir Khan",
-    date: "October 2025",
-    text: "Our Bali itinerary felt balanced and easy. The temples, rice terraces, beaches, and transfers were all arranged beautifully.",
   },
 ];
 
@@ -95,7 +83,9 @@ function TripInfoIcon({ name }) {
 
 function TripDetailPage({ trip, images, onNavigate }) {
   const selectedTrip = { ...defaultTrip, image: images[0], ...trip };
-  const sideImage = images[3] || selectedTrip.image;
+  const tripItinerary = selectedTrip.itinerary || defaultItinerary;
+  const tripReviews = getDetailPageReviews(selectedTrip.reviewIndex ?? selectedTrip.title);
+  const sideImage = selectedTrip.image || images[3];
   const [guestCount, setGuestCount] = useState(2);
   const pricePerPerson = parsePrice(selectedTrip.price);
   const earlyBirdDiscount = 500;
@@ -128,9 +118,8 @@ function TripDetailPage({ trip, images, onNavigate }) {
             </div>
             <h1 id="trip-detail-title">{selectedTrip.title}</h1>
             <p>
-              Discover beaches, temples, waterfalls, rice terraces, and
-              unforgettable cultural activities with a curated journey designed
-              for comfort, culture, and adventure.
+              {selectedTrip.description ||
+                'Discover beaches, temples, waterfalls, rice terraces, and unforgettable cultural activities with a curated journey designed for comfort, culture, and adventure.'}
             </p>
           </div>
 
@@ -164,7 +153,7 @@ function TripDetailPage({ trip, images, onNavigate }) {
           >
             <h2 id="itinerary-title">Itinerary</h2>
             <ol className="itinerary-list">
-              {itinerary.map((item, index) => (
+              {tripItinerary.map((item, index) => (
                 <li key={item.title}>
                   <span>{index + 1}</span>
                   <div>
@@ -192,16 +181,22 @@ function TripDetailPage({ trip, images, onNavigate }) {
             </div>
 
             <div className="review-detail-list">
-              {reviews.map((review) => (
+              {tripReviews.map((review) => (
                 <article key={review.name}>
-                  <span className="review-avatar" aria-hidden="true" />
+                  <img
+                    className="review-avatar"
+                    src={review.avatar}
+                    alt=""
+                    loading="lazy"
+                    aria-hidden="true"
+                  />
                   <div>
                     <div className="review-title-row">
                       <div>
                         <h3>{review.name}</h3>
                         <p>{review.date}</p>
                       </div>
-                      <span>*****</span>
+                      <span>{'*'.repeat(review.stars)}</span>
                     </div>
                     <p>{review.text}</p>
                   </div>

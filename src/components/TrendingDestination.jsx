@@ -1,5 +1,5 @@
 import DestinationCard from './DestinationCard'
-import { baseDestinations, getDestinationImage } from './DestinationPage'
+import { baseDestinations, getDestinationImage } from './destinationData'
 
 const labels = ['Popular', 'Hot Deal', 'Popular', 'Cultural', 'Hot Deal', 'Popular']
 const featuredRegions = ['Indonesia', 'Singapore', 'Dubai', 'Bhutan', 'Nepal', 'Trek']

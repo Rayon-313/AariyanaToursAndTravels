@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Header from "./header";
-import { baseDestinations, getDestinationImage } from "./DestinationPage";
+import { baseDestinations, getDestinationTripDetails } from "./destinationData";
 
 // Select Banner Manually
 import banner1 from "../assets/0a9fa572-3c0b-47f8-ad7b-a20b30a5a88f.jpg";
@@ -82,15 +82,7 @@ function Home({ images, onNavigate, onViewDetails }) {
                   onClick={(e) => {
                     e.stopPropagation(); // Prevents triggering parent onClick
                     if (onViewDetails) {
-                      onViewDetails({
-                        title: dest.title,
-                        location: dest.region,
-                        price: dest.price,
-                        rating: dest.rating,
-                        duration: dest.duration,
-                        image: getDestinationImage(dest, images),
-                        source: "destination",
-                      });
+                      onViewDetails(getDestinationTripDetails(dest, images));
                       return;
                     }
 

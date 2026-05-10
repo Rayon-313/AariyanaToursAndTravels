@@ -1,3 +1,5 @@
+import { companyPhoneNumber } from './WhatsAppButton'
+
 function SiteFooter({ onNavigate }) {
   const navigate = (event, page) => {
     if (!onNavigate) {
@@ -18,7 +20,12 @@ function SiteFooter({ onNavigate }) {
             <a href="mailto:info@aariyanatours.com" aria-label="Email Aariyana Tours and Travels">
               <span className="footer-mail-icon" aria-hidden="true" />
             </a>
-            <a href="tel:+9779800000000" aria-label="Call Aariyana Tours and Travels">
+            <a
+              href={`https://wa.me/${companyPhoneNumber}`}
+              rel="noopener noreferrer"
+              target="_blank"
+              aria-label="Chat with Aariyana Tours and Travels on WhatsApp"
+            >
               <span className="footer-phone-icon" aria-hidden="true" />
             </a>
           </div>
@@ -27,7 +34,7 @@ function SiteFooter({ onNavigate }) {
         <nav className="footer-links" aria-label="Explore">
           <h3>Explore</h3>
           <a href="#destinations" onClick={(event) => navigate(event, 'destinations')}>Destination</a>
-          <a href="#bookings" onClick={(event) => navigate(event, 'bookings')}>Bookings</a>
+          <a href="#stories" onClick={(event) => navigate(event, 'stories')}>Stories</a>
           <a href="#support-contact" onClick={(event) => navigate(event, 'support-contact')}>Support</a>
         </nav>
 

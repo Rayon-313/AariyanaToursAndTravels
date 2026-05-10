@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import logoImage from '../assets/logooo.png'
 
 const navItems = [
@@ -12,8 +12,8 @@ const navItems = [
   { label: 'Stories', href: '#stories', key: 'stories' },
   {
     label: 'Support',
-    // href: '#support',
-    // key: 'support',
+    href: '#support',
+    key: 'support',
     menu: [
       { label: 'About Us', href: '#about', key: 'about' },
       { label: 'Ask for help / Contact us', href: '#support-contact', key: 'support-contact' },
@@ -22,17 +22,17 @@ const navItems = [
 ]
 
 function Header({ activePage = 'home', onNavigate, variant = 'hero' }) {
-  const [activeNav, setActiveNav] = useState(activePage)
   const [searchTerm, setSearchTerm] = useState('')
-
-  useEffect(() => {
-    setActiveNav(activePage)
-  }, [activePage])
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const activeNav = activePage
+  const isNavActive = (item) =>
+    item.key === activeNav ||
+    (item.key === 'support' && (activeNav === 'about' || activeNav === 'support-contact'))
 
   const navigate = (event, key) => {
-    setActiveNav(key)
+    setIsMenuOpen(false)
 
-    if ((key === 'home' || key === 'destinations' || key === 'trek' || key === 'stories'  || key === 'support-contact' || key === 'about') && onNavigate) {
+    if ((key === 'home' || key === 'destinations' || key === 'trek' || key === 'stories' || key === 'support' || key === 'support-contact' || key === 'about') && onNavigate) {
       event.preventDefault()
       onNavigate(key === 'trek' ? 'destinations' : key === 'support' ? 'support-contact' : key, key === 'trek' ? { region: 'Trek' } : {})
       window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -43,14 +43,16 @@ function Header({ activePage = 'home', onNavigate, variant = 'hero' }) {
     event.preventDefault()
 
     if (onNavigate) {
+      setIsMenuOpen(false)
       onNavigate('destinations', { searchQuery: searchTerm.trim() })
     }
   }
 
   const navigateDestinationMenu = (event, menuItem, itemKey) => {
+    setIsMenuOpen(false)
+
     if (menuItem.searchQuery && onNavigate) {
       event.preventDefault()
-      setActiveNav('destinations')
       setSearchTerm(menuItem.searchQuery)
       onNavigate('destinations', { searchQuery: menuItem.searchQuery })
       return
@@ -77,6 +79,19 @@ function Header({ activePage = 'home', onNavigate, variant = 'hero' }) {
         <span>GET 20% OFF Book Now</span>
       </p>
 
+      <button
+        className="header-menu-toggle"
+        type="button"
+        aria-label={isMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+        aria-expanded={isMenuOpen}
+        aria-controls="main-navigation"
+        onClick={() => setIsMenuOpen((currentState) => !currentState)}
+      >
+        <span />
+        <span />
+        <span />
+      </button>
+
       <form className="destination-search" onSubmit={searchDestinations}>
         <button className="search-submit-icon" type="submit" aria-label="Search destinations">
           <span className="search-icon" aria-hidden="true" />
@@ -89,14 +104,18 @@ function Header({ activePage = 'home', onNavigate, variant = 'hero' }) {
         />
       </form>
 
-      <nav className="main-nav" aria-label="Main navigation">
+      <nav
+        className={`main-nav ${isMenuOpen ? 'is-open' : ''}`}
+        id="main-navigation"
+        aria-label="Main navigation"
+      >
         {navItems.map((item) => (
           <div className="nav-item" key={item.key}>
             <a
-              className={activeNav === item.key ? 'active' : undefined}
+              className={isNavActive(item) ? 'active' : undefined}
               href={item.href}
               onClick={(event) => navigate(event, item.key)}
-              aria-current={activeNav === item.key ? 'page' : undefined}
+              aria-current={isNavActive(item) ? 'page' : undefined}
               aria-haspopup={item.menu ? 'true' : undefined}
             >
               {item.label}

@@ -34,11 +34,19 @@ const destinationImages = [
   image09, image10, image11, image12, image13,
 ];
 
+const getInitialHistoryState = () => window.history.state || {};
+
 function App() {
-  const [page, setPage] = useState('home');
-  const [selectedTrip, setSelectedTrip] = useState(null);
-  const [destinationSearch, setDestinationSearch] = useState('');
-  const [destinationRegion, setDestinationRegion] = useState('');
+  const [page, setPage] = useState(() => getInitialHistoryState().page || 'home');
+  const [selectedTrip, setSelectedTrip] = useState(() => getInitialHistoryState().trip || null);
+  const [destinationSearch, setDestinationSearch] = useState(() => {
+    const initialState = getInitialHistoryState();
+    return initialState.page === 'destinations' ? initialState.searchQuery || '' : '';
+  });
+  const [destinationRegion, setDestinationRegion] = useState(() => {
+    const initialState = getInitialHistoryState();
+    return initialState.page === 'destinations' ? initialState.region || '' : '';
+  });
 
   useEffect(() => {
     if ("scrollRestoration" in window.history) {
@@ -47,12 +55,7 @@ function App() {
 
     const initialState = window.history.state;
 
-    if (initialState?.page) {
-      setPage(initialState.page);
-      setSelectedTrip(initialState.trip || null);
-      setDestinationSearch(initialState.page === 'destinations' ? initialState.searchQuery || '' : '');
-      setDestinationRegion(initialState.page === 'destinations' ? initialState.region || '' : '');
-    } else {
+    if (!initialState?.page) {
       window.history.replaceState({ page: "home", trip: null }, "", "#home");
     }
 
@@ -97,6 +100,7 @@ function App() {
     return (
       <main className="site-shell">
         <DestinationPage
+          key={destinationRegion || 'all-destinations'}
           images={destinationImages}
           onNavigate={navigateTo}
           onViewDetails={openTripDetail}
