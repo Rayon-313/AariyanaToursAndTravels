@@ -145,12 +145,6 @@ function SupportPage({ image, onNavigate }) {
           <label className="support-search">
             <input type="search" placeholder="Search for booking, visas or travel advice..." />
           </label>
-          <p>
-            <span>Popular</span>
-            Cancel Booking
-            <span>Refund status</span>
-            Visa requirements
-          </p>
         </div>
       </section>
 
