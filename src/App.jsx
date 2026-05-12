@@ -181,6 +181,7 @@ function App() {
       <ChooseDestination
         images={destinationImages}
         onViewAll={() => navigateTo("destinations")}
+        onSelectRegion={(region) => navigateTo("destinations", { region })}
       />
       <AdventureStyle
         images={destinationImages}

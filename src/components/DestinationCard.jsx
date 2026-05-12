@@ -1,6 +1,29 @@
-function DestinationCard({ image, label = 'Popular', title = 'Bali, Indonesia', duration = '7 Days Tour', price = 'Rs 89999', featured = false }) {
+function DestinationCard({
+  image,
+  label = 'Popular',
+  title = 'Bali, Indonesia',
+  duration = '7 Days Tour',
+  price = 'Rs 89999',
+  featured = false,
+  onClick,
+}) {
+  const handleKeyDown = (event) => {
+    if (!onClick || (event.key !== 'Enter' && event.key !== ' ')) {
+      return
+    }
+
+    event.preventDefault()
+    onClick()
+  }
+
   return (
-    <article className={`destination-card${featured ? ' is-featured' : ''}`}>
+    <article
+      className={`destination-card${featured ? ' is-featured' : ''}${onClick ? ' is-clickable' : ''}`}
+      onClick={onClick}
+      onKeyDown={handleKeyDown}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+    >
       <img src={image} alt="" />
       <div className="card-shade" />
       <div className="card-content">
@@ -8,9 +31,9 @@ function DestinationCard({ image, label = 'Popular', title = 'Bali, Indonesia', 
         <div className="destination-meta">
           <div>
             <h3>{title}</h3>
-            <p>{duration}</p>
+            {duration && <p>{duration}</p>}
           </div>
-          <strong>{price}</strong>
+          {price && <strong>{price}</strong>}
         </div>
       </div>
     </article>

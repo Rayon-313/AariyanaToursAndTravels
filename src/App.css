@@ -1122,6 +1122,15 @@ button {
   outline-offset: -3px;
 }
 
+.destination-card.is-clickable {
+  cursor: pointer;
+}
+
+.destination-card.is-clickable:focus-visible {
+  outline: 3px solid rgba(241, 196, 15, 0.9);
+  outline-offset: 4px;
+}
+
 .destination-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 28px 56px rgba(9, 21, 70, 0.2);

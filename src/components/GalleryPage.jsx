@@ -79,7 +79,7 @@ function GalleryPage({ images, onNavigate }) {
             onClick={() => setSelectedImage(null)}
             aria-label="Close gallery image preview"
           >
-            ×
+            
           </button>
           <img src={selectedImage} alt="" onClick={(event) => event.stopPropagation()} />
         </div>
